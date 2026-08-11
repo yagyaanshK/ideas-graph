@@ -1,0 +1,9 @@
+# generated body-only copy used only for the claude.ai artifact preview
+_artifact.html
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
