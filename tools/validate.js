@@ -37,6 +37,7 @@ all.forEach(function (n) {
     if (n.k === "product" && (!n.rc || !RC[n.rc])) errs.push(n.id + ": missing/bad reality check rc=" + n.rc);
   }
   if (!n.b || n.b.length < 20) errs.push(n.id + ": blurb too short");
+  if (!n.t || n.t.length < 6) errs.push(n.id + ": missing short title t");
 });
 Object.keys(SRC).forEach(function (k) {
   var t = SRC[k];
