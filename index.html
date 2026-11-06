@@ -3,193 +3,143 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Agentic Company — Idea Graph</title>
-<meta name="description" content="An interactive map of actionable ideas extracted from founder talks — clustered by theme, sized by cross-speaker consensus, linked by how ideas reinforce, relate to, or tension against each other.">
-</head>
-<body>
+<title>Agentic Company · Idea Graph</title>
+<meta name="description" content="Actionable ideas from founder talks plus the patterns and products making them real: mapped, weighted by consensus, dated and cross-linked.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f5f6f8; --surface:#ffffff; --surface-2:#eef1f5;
-    --ink:#1b2130; --muted:#5c6675; --faint:#8a93a3; --hairline:#e4e8ee;
-    --link:#2f6fed; --accent:#c8901f; --accent-soft:#f3e2b4;
+    --bg:#f6f7f9; --surface:#ffffff; --surface-2:#eef1f5; --surface-3:#e4e8ee;
+    --ink:#161b26; --muted:#5b6474; --faint:#8b94a3; --hairline:#e3e7ed;
+    --link:#2f6fed; --accent:#c8901f; --accent-soft:#fbf1d6;
     --t-loops:#0f9d8f; --t-exec:#2f7ff0; --t-build:#6d5cf0;
-    --t-own:#1fa254; --t-tech:#a24fd6; --t-ops:#e04e78; --t-mind:#e0862f; --t-world:#5b7a99;
-    --edge-reinforce:#5c8a80; --edge-relate:#aeb7c3; --edge-tension:#d8493c; --edge-evidence:#5b7a99;
-    --shadow:0 6px 24px rgba(20,28,44,.12), 0 1px 3px rgba(20,28,44,.10);
-    --mono:ui-monospace,"SFMono-Regular","Cascadia Code","JetBrains Mono",Menlo,Consolas,monospace;
-    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --t-own:#1fa254; --t-tech:#a24fd6; --t-ops:#e04e78; --t-mind:#e0862f; --t-world:#4f6f94;
+    --edge-reinforce:#5c8a80; --edge-relate:#b3bcc8; --edge-tension:#d8493c; --edge-evidence:#4f6f94;
+    --shadow:0 1px 2px rgba(16,24,40,.06), 0 8px 24px rgba(16,24,40,.08);
+    --shadow-sm:0 1px 2px rgba(16,24,40,.06);
+    --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+    --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --r:12px;
   }
   @media (prefers-color-scheme:dark){
     :root:not([data-theme="light"]){
-      --bg:#0d1016; --surface:#151a22; --surface-2:#1c222c;
-      --ink:#e7ebf2; --muted:#98a2b2; --faint:#68717f; --hairline:#252d3a;
-      --link:#6ea8ff; --accent:#f4c14b; --accent-soft:#3a3117;
-      --t-loops:#1fc3b2; --t-exec:#5c9bff; --t-build:#9384ff;
-      --t-own:#3ecb76; --t-tech:#c072ec; --t-ops:#ff6f97; --t-mind:#f5a24a; --t-world:#8fb0d4;
-      --edge-reinforce:#5fb3a3; --edge-relate:#535d6c; --edge-tension:#f0645a; --edge-evidence:#8fb0d4;
-      --shadow:0 10px 30px rgba(0,0,0,.5), 0 1px 2px rgba(0,0,0,.4);
+      --bg:#0b0e14; --surface:#131720; --surface-2:#1a1f2a; --surface-3:#232a37;
+      --ink:#e8ecf3; --muted:#9aa4b5; --faint:#6b7382; --hairline:#222837;
+      --link:#7fb0ff; --accent:#f4c14b; --accent-soft:#2f2914;
+      --t-loops:#22c7b5; --t-exec:#5c9bff; --t-build:#9b8cff;
+      --t-own:#3ecb76; --t-tech:#c57af0; --t-ops:#ff6f97; --t-mind:#f5a24a; --t-world:#8fb0d4;
+      --edge-reinforce:#5fb3a3; --edge-relate:#4b5566; --edge-tension:#f0645a; --edge-evidence:#8fb0d4;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.45);
+      --shadow-sm:0 1px 2px rgba(0,0,0,.4);
     }
   }
   :root[data-theme="dark"]{
-    --bg:#0d1016; --surface:#151a22; --surface-2:#1c222c;
-    --ink:#e7ebf2; --muted:#98a2b2; --faint:#68717f; --hairline:#252d3a;
-    --link:#6ea8ff; --accent:#f4c14b; --accent-soft:#3a3117;
-    --t-loops:#1fc3b2; --t-exec:#5c9bff; --t-build:#9384ff;
-    --t-own:#3ecb76; --t-tech:#c072ec; --t-ops:#ff6f97; --t-mind:#f5a24a; --t-world:#8fb0d4;
-    --edge-reinforce:#5fb3a3; --edge-relate:#535d6c; --edge-tension:#f0645a; --edge-evidence:#8fb0d4;
-    --shadow:0 10px 30px rgba(0,0,0,.5), 0 1px 2px rgba(0,0,0,.4);
+    --bg:#0b0e14; --surface:#131720; --surface-2:#1a1f2a; --surface-3:#232a37;
+    --ink:#e8ecf3; --muted:#9aa4b5; --faint:#6b7382; --hairline:#222837;
+    --link:#7fb0ff; --accent:#f4c14b; --accent-soft:#2f2914;
+    --t-loops:#22c7b5; --t-exec:#5c9bff; --t-build:#9b8cff;
+    --t-own:#3ecb76; --t-tech:#c57af0; --t-ops:#ff6f97; --t-mind:#f5a24a; --t-world:#8fb0d4;
+    --edge-reinforce:#5fb3a3; --edge-relate:#4b5566; --edge-tension:#f0645a; --edge-evidence:#8fb0d4;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.45);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.4);
   }
 
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{
-    margin:0; background:var(--bg); color:var(--ink);
-    font-family:var(--sans); font-size:15px; line-height:1.5;
-    -webkit-font-smoothing:antialiased; overflow:hidden;
-  }
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:14.5px; line-height:1.5; -webkit-font-smoothing:antialiased; overflow:hidden}
   a{color:var(--link)}
+  button{font:inherit; color:inherit}
+  ::selection{background:var(--accent-soft)}
 
-  /* ---- top bar ---- */
-  header.top{
-    display:flex; align-items:center; gap:18px; flex-wrap:wrap;
-    padding:12px 18px; border-bottom:1px solid var(--hairline);
-    background:var(--surface); position:relative; z-index:5;
-  }
-  .brand{display:flex; flex-direction:column; gap:1px; margin-right:6px}
-  .brand h1{
-    margin:0; font-size:17px; font-weight:680; letter-spacing:-.01em;
-    display:flex; align-items:center; gap:9px;
-  }
-  .brand h1 .dot{width:9px;height:9px;border-radius:50%;
-    background:conic-gradient(from 0deg,var(--t-loops),var(--t-exec),var(--t-build),var(--t-own),var(--t-tech),var(--t-ops),var(--t-mind),var(--t-loops));}
-  .brand .sub{font-size:12px; color:var(--muted)}
-  .stats{display:flex; gap:8px; flex-wrap:wrap}
-  .stat{
-    display:flex; align-items:baseline; gap:6px; padding:5px 11px;
-    background:var(--surface-2); border:1px solid var(--hairline);
-    border-radius:999px; font-size:12px; color:var(--muted);
-  }
-  .stat b{font-size:14px; color:var(--ink); font-variant-numeric:tabular-nums}
-  .top .spacer{flex:1}
-  .iconbtn{
-    display:inline-flex; align-items:center; justify-content:center; gap:7px;
-    height:34px; padding:0 13px; border-radius:9px; cursor:pointer;
-    background:var(--surface-2); color:var(--ink);
-    border:1px solid var(--hairline); font:inherit; font-size:13px;
-  }
-  .iconbtn:hover{border-color:var(--muted)}
-  .iconbtn:focus-visible{outline:2px solid var(--link); outline-offset:2px}
+  /* ---------- top bar ---------- */
+  header.top{display:flex; align-items:center; gap:14px; padding:10px 16px; border-bottom:1px solid var(--hairline); background:var(--surface); position:relative; z-index:6; min-height:58px}
+  .brand{display:flex; align-items:center; gap:10px; min-width:0}
+  .brand .logo{width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg,var(--t-loops),var(--t-build)); flex:none; display:grid; place-items:center; color:#fff; font-weight:700; font-size:13px; letter-spacing:-.02em}
+  .brand h1{margin:0; font-size:15.5px; font-weight:650; letter-spacing:-.01em; line-height:1.2; white-space:nowrap}
+  .brand .sub{display:block; font-size:12px; color:var(--muted); font-weight:400; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .spacer{flex:1}
+  .viewswitch{display:flex; background:var(--surface-2); border:1px solid var(--hairline); border-radius:10px; padding:3px; gap:2px}
+  .viewswitch button{border:0; background:transparent; padding:6px 14px; border-radius:7px; font-size:13px; font-weight:500; color:var(--muted); cursor:pointer; display:flex; align-items:center; gap:6px}
+  .viewswitch button[aria-pressed="true"]{background:var(--surface); color:var(--ink); box-shadow:var(--shadow-sm); font-weight:600}
+  .updated{font-family:var(--mono); font-size:11px; color:var(--muted); background:var(--surface-2); border:1px solid var(--hairline); border-radius:999px; padding:4px 10px; white-space:nowrap}
+  .updated b{color:var(--ink); font-weight:500}
+  .iconbtn{border:1px solid var(--hairline); background:var(--surface); color:var(--muted); border-radius:10px; width:36px; height:36px; display:grid; place-items:center; cursor:pointer; font-size:15px}
+  .iconbtn:hover{background:var(--surface-2); color:var(--ink)}
 
-  /* ---- app layout ---- */
-  .app{display:flex; height:calc(100vh - 60px); min-height:0}
-  .controls{
-    width:272px; flex:none; border-right:1px solid var(--hairline);
-    background:var(--surface); overflow-y:auto; padding:16px 16px 40px;
-  }
-  .stage{flex:1; position:relative; min-width:0; overflow:hidden;
-    background:
-      radial-gradient(1200px 700px at 50% 42%, color-mix(in srgb,var(--surface) 55%, transparent), transparent 70%);
-  }
-  svg#graph{width:100%; height:100%; display:block; touch-action:none; cursor:grab}
-  svg#graph.grabbing{cursor:grabbing}
+  /* ---------- layout ---------- */
+  .app{display:grid; grid-template-columns:272px minmax(0,1fr) 380px; height:calc(100% - 58px)}
+  aside.side{border-right:1px solid var(--hairline); background:var(--surface); overflow-y:auto; padding:14px 14px 28px}
+  main.stage{position:relative; overflow:hidden; background:var(--bg)}
+  section.list{overflow-y:auto; padding:18px 22px 40px; display:none}
+  body.view-list main.stage{display:none}
+  body.view-list section.list{display:block}
+  aside.panel{border-left:1px solid var(--hairline); background:var(--surface); overflow-y:auto; display:flex; flex-direction:column}
 
-  .ctl-group{margin-bottom:22px}
-  .ctl-label{
-    font-family:var(--mono); font-size:10.5px; letter-spacing:.14em;
-    text-transform:uppercase; color:var(--faint); margin:0 0 9px;
-    display:flex; align-items:center; justify-content:space-between;
-  }
-  .search{
-    width:100%; height:36px; padding:0 12px; border-radius:9px;
-    border:1px solid var(--hairline); background:var(--surface-2);
-    color:var(--ink); font:inherit; font-size:13px;
-  }
-  .search:focus{outline:2px solid var(--link); outline-offset:1px; border-color:transparent}
-  .search::placeholder{color:var(--faint)}
-
-  .seg{display:flex; background:var(--surface-2); border:1px solid var(--hairline);
-    border-radius:9px; padding:3px; gap:3px}
-  .seg button{
-    flex:1; height:30px; border:0; border-radius:6px; cursor:pointer;
-    background:transparent; color:var(--muted); font:inherit; font-size:12.5px;
-  }
-  .seg button[aria-pressed="true"]{background:var(--surface); color:var(--ink); box-shadow:var(--shadow); font-weight:600}
-
-  .chips{display:flex; flex-direction:column; gap:5px}
-  .chip{
-    display:flex; align-items:center; gap:9px; width:100%; text-align:left;
-    padding:7px 9px; border-radius:8px; cursor:pointer; font:inherit; font-size:13px;
-    background:transparent; border:1px solid transparent; color:var(--ink);
-  }
+  /* ---------- sidebar ---------- */
+  .stats{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px}
+  .stat{background:var(--surface-2); border-radius:10px; padding:9px 11px}
+  .stat b{display:block; font-size:19px; font-weight:650; letter-spacing:-.02em; line-height:1.1; font-variant-numeric:tabular-nums}
+  .stat span{font-size:11.5px; color:var(--muted); white-space:nowrap}
+  .group{margin-bottom:16px}
+  .label{font-family:var(--mono); font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--faint); margin:0 0 7px; display:flex; align-items:center; gap:8px}
+  .label .act{margin-left:auto; all:unset; cursor:pointer; color:var(--link); font-family:var(--sans); font-size:11.5px; letter-spacing:0; text-transform:none}
+  .searchwrap{position:relative}
+  .search{width:100%; padding:9px 34px 9px 34px; border-radius:10px; border:1px solid var(--hairline); background:var(--surface-2); color:var(--ink); font:inherit; font-size:13.5px; outline:none}
+  .search:focus{border-color:var(--link); background:var(--surface); box-shadow:0 0 0 3px rgba(47,111,237,.15)}
+  .searchwrap .ico{position:absolute; left:11px; top:50%; transform:translateY(-50%); color:var(--faint); font-size:13px; pointer-events:none}
+  .searchwrap .kbd{position:absolute; right:9px; top:50%; transform:translateY(-50%); font-family:var(--mono); font-size:10px; color:var(--faint); border:1px solid var(--hairline); border-radius:5px; padding:1px 5px; background:var(--surface); pointer-events:none}
+  .layers{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+  .layer{border:1px solid var(--hairline); background:var(--surface); border-radius:10px; padding:9px 10px; text-align:left; cursor:pointer; display:flex; flex-direction:column; gap:2px; position:relative}
+  .layer b{font-size:13px; font-weight:600}
+  .layer span{font-size:11.5px; color:var(--muted)}
+  .layer .n{position:absolute; right:10px; top:9px; font-family:var(--mono); font-size:11px; color:var(--faint)}
+  .layer[aria-pressed="true"]{border-color:var(--ink); background:var(--surface-2)}
+  .layer[aria-pressed="false"]{opacity:.5}
+  .layer .sw{width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:6px; vertical-align:middle}
+  .seg{display:flex; background:var(--surface-2); border:1px solid var(--hairline); border-radius:10px; padding:3px; gap:2px}
+  .seg button{flex:1; border:0; background:transparent; padding:6px 0; border-radius:7px; font-size:12.5px; color:var(--muted); cursor:pointer}
+  .seg button[aria-pressed="true"]{background:var(--surface); color:var(--ink); box-shadow:var(--shadow-sm); font-weight:600}
+  .chips{display:flex; flex-direction:column; gap:3px}
+  .chip{display:flex; align-items:center; gap:9px; border:0; background:transparent; padding:6px 8px; border-radius:8px; text-align:left; cursor:pointer; font-size:13px; color:var(--ink)}
   .chip:hover{background:var(--surface-2)}
-  .chip[aria-pressed="false"]{opacity:.4}
-  .chip .sw{width:11px; height:11px; border-radius:3px; flex:none}
-  .chip .cnt{margin-left:auto; font-size:11px; color:var(--faint); font-variant-numeric:tabular-nums}
-
-  .legend{display:flex; flex-direction:column; gap:9px; font-size:12.5px; color:var(--muted)}
+  .chip[aria-pressed="false"]{opacity:.38}
+  .chip .sw{width:10px; height:10px; border-radius:3px; flex:none}
+  .chip .cnt{margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--faint)}
+  details.fold{border-top:1px solid var(--hairline); padding-top:10px; margin-top:4px}
+  details.fold summary{cursor:pointer; list-style:none; font-family:var(--mono); font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--faint); display:flex; align-items:center; gap:6px; padding:4px 0 8px}
+  details.fold summary::-webkit-details-marker{display:none}
+  details.fold summary::before{content:"▸"; font-size:10px; transition:transform .15s}
+  details.fold[open] summary::before{transform:rotate(90deg)}
+  .legend{display:flex; flex-direction:column; gap:8px; font-size:12.5px; color:var(--muted); padding:2px 0 8px}
   .legend .row{display:flex; align-items:center; gap:9px}
   .legend .line{width:26px; height:0; flex:none}
   .legend .rn{border-top:2.5px solid var(--edge-reinforce)}
   .legend .rl{border-top:2.5px dashed var(--edge-relate)}
   .legend .rt{border-top:2.5px solid var(--edge-tension)}
-  .legend .sz{display:flex; align-items:center; gap:9px}
-  .legend .sz i{border-radius:50%; background:var(--faint); flex:none; display:block}
-  .legend .ring{width:14px;height:14px;border-radius:50%;border:2px solid var(--accent);flex:none;box-sizing:border-box}
   .legend .rv{border-top:2.5px dotted var(--edge-evidence)}
-  .legend .sq{width:14px;height:14px;border-radius:3px;background:var(--faint);flex:none;display:block}
-  .legend .dia{width:11px;height:11px;background:var(--faint);flex:none;display:block;transform:rotate(45deg);margin:0 3px}
-  .seg .cnt{margin-left:5px;font-size:10.5px;color:var(--faint);font-variant-numeric:tabular-nums}
-  .src .dt,.srclinks .dt{font-family:var(--mono);font-size:10px;color:var(--faint);margin-right:8px}
-  .panel .dates{display:flex;flex-wrap:wrap;gap:4px 10px;margin:-4px 0 14px;font-family:var(--mono);font-size:10.5px;color:var(--muted)}
-  .panel .dates b{font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;font-size:9.5px;margin-right:4px}
-  .pill.st{text-transform:capitalize}
-  .pill.st-shipping{border-color:var(--t-own);color:var(--t-own)}
-  .pill.st-announced,.pill.st-building,.pill.st-exploring{border-color:var(--t-exec);color:var(--t-exec)}
-  .pill.st-dead,.pill.st-dropped{border-color:var(--t-ops);color:var(--t-ops);text-decoration:line-through}
-  .pill.st-acquired,.pill.st-idea{border-color:var(--accent);color:var(--accent)}
-  .pill.rc{font-family:var(--mono);font-size:10.5px;letter-spacing:.02em}
-  .pill.rc-working{border-color:var(--t-own);color:var(--t-own)}
-  .pill.rc-early{border-color:var(--t-exec);color:var(--t-exec)}
-  .pill.rc-mixed{border-color:var(--accent);color:var(--accent)}
-  .pill.rc-unproven{border-color:var(--faint);color:var(--muted)}
-  .pill.rc-hype,.pill.rc-dead{border-color:var(--t-ops);color:var(--t-ops)}
-
-  .sources{display:flex; flex-direction:column; gap:11px}
-  .src{font-size:12px; line-height:1.45}
-  .src .who{color:var(--ink); font-weight:600}
-  .src .tt{color:var(--muted); font-style:italic}
-  .src .lk{display:flex; gap:10px; margin-top:2px}
-  .src .lk a{font-family:var(--mono); font-size:10.5px; text-decoration:none; letter-spacing:.03em}
+  .legend i{background:var(--faint); flex:none; display:block}
+  .legend .ci{width:12px; height:12px; border-radius:50%}
+  .legend .ci.big{width:18px; height:18px; box-shadow:0 0 0 2px var(--surface), 0 0 0 4px var(--accent)}
+  .legend .sq{width:12px; height:12px; border-radius:3px}
+  .legend .dia{width:11px; height:11px; transform:rotate(45deg); margin:0 2px}
+  .legend .nd{width:7px; height:7px; border-radius:50%; background:var(--accent); margin:0 3px}
+  .src{font-size:12.5px; line-height:1.4; padding:7px 0; border-top:1px solid var(--hairline)}
+  .src:first-child{border-top:0}
+  .src .tag{font-family:var(--mono); font-size:10.5px; color:var(--faint); margin-right:6px}
+  .src .who{font-weight:600}
+  .src .dt{font-family:var(--mono); font-size:10.5px; color:var(--faint); margin-left:6px}
+  .src .tt{color:var(--muted); display:block; font-size:12px}
+  .src .lk{display:flex; gap:10px; margin-top:3px}
+  .src .lk a{font-family:var(--mono); font-size:10.5px; text-decoration:none}
   .src .lk a:hover{text-decoration:underline}
-  .src .tag{font-family:var(--mono); font-size:10px; color:var(--faint)}
+  .note{font-size:12px; color:var(--muted); line-height:1.5; margin:10px 0 0}
+  .note code{font-family:var(--mono); font-size:11px; background:var(--surface-2); padding:1px 5px; border-radius:5px}
 
-  .note{font-size:11.5px; color:var(--faint); line-height:1.5; margin-top:6px}
-
-  /* ---- hint ---- */
-  .hint{
-    position:absolute; left:14px; bottom:12px; z-index:2; pointer-events:none;
-    font-family:var(--mono); font-size:10.5px; color:var(--faint);
-    background:color-mix(in srgb,var(--surface) 82%, transparent);
-    padding:5px 9px; border-radius:7px; border:1px solid var(--hairline);
-  }
-
-  /* ---- hover tooltip ---- */
-  .tooltip{
-    position:absolute; z-index:6; pointer-events:none; left:0; top:0; max-width:300px;
-    background:var(--surface); border:1px solid var(--hairline); border-radius:11px;
-    box-shadow:var(--shadow); padding:11px 13px; opacity:0; transform:translateY(3px);
-    transition:opacity .12s ease, transform .12s ease;
-  }
-  .tooltip.show{opacity:1; transform:none}
-  .tt-h{display:flex; align-items:center; gap:8px; margin-bottom:7px}
-  .tt-id{font-family:var(--mono); font-size:10.5px; color:#fff; padding:2px 7px; border-radius:5px; font-weight:600; letter-spacing:.03em}
-  .tt-th{font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
-  .tt-b{font-size:12.5px; line-height:1.46; color:var(--ink)}
-  .tt-p{font-size:10.5px; color:var(--faint); margin-top:7px; font-family:var(--mono); letter-spacing:.02em}
-  @media (prefers-reduced-motion:reduce){.tooltip{transition:none}}
-
-  /* ---- svg elements ---- */
-  .edge{stroke-width:1.6; fill:none; transition:opacity .18s}
+  /* ---------- stage ---------- */
+  svg#graph{width:100%; height:100%; display:block; cursor:grab; touch-action:none}
+  svg#graph.grabbing{cursor:grabbing}
+  .edge{stroke-width:1.5; fill:none; transition:opacity .18s}
   .edge.reinforce{stroke:var(--edge-reinforce)}
   .edge.relate{stroke:var(--edge-relate); stroke-dasharray:5 5}
   .edge.tension{stroke:var(--edge-tension); stroke-width:2}
@@ -197,150 +147,208 @@
   .node{cursor:pointer}
   .node .body{stroke:var(--surface); stroke-width:2; transition:opacity .18s}
   .node circle.ring{fill:none; stroke:var(--accent); opacity:.95}
-  .node text{
-    font-family:var(--mono); font-size:10px; fill:var(--ink);
-    text-anchor:middle; paint-order:stroke; stroke:var(--surface); stroke-width:3.5px;
-    stroke-linejoin:round; pointer-events:none; transition:opacity .18s;
-  }
+  .node circle.newdot{fill:var(--accent); stroke:var(--surface); stroke-width:1.5}
+  .node text{font-family:var(--mono); font-size:9.5px; fill:var(--muted); text-anchor:middle; pointer-events:none; transition:opacity .18s; paint-order:stroke; stroke:var(--bg); stroke-width:3px; stroke-linejoin:round}
   .node:focus-visible{outline:none}
   .node:focus-visible .body{stroke:var(--link); stroke-width:3}
-
-  svg#graph.has-focus .edge{opacity:.07}
-  svg#graph.has-focus .node .body{opacity:.22}
-  svg#graph.has-focus .node text{opacity:.12}
+  svg#graph.has-focus .edge{opacity:.06}
+  svg#graph.has-focus .node .body{opacity:.18}
+  svg#graph.has-focus .node circle.ring,svg#graph.has-focus .node circle.newdot{opacity:.15}
+  svg#graph.has-focus .node text{opacity:.1}
   .edge.hl{opacity:1 !important}
-  .node.hl .body{opacity:1 !important}
-  .node.hl text{opacity:1 !important}
+  .node.hl .body,.node.hl circle.ring,.node.hl circle.newdot{opacity:1 !important}
+  .node.hl text{opacity:1 !important; fill:var(--ink)}
   .node.hidden,.edge.hidden{display:none}
   .node.selected .body{stroke:var(--accent); stroke-width:3}
+  .stagectl{position:absolute; right:14px; bottom:14px; display:flex; flex-direction:column; gap:6px; z-index:3}
+  .stagectl button{width:34px; height:34px; border-radius:9px; border:1px solid var(--hairline); background:var(--surface); color:var(--ink); cursor:pointer; font-size:16px; box-shadow:var(--shadow-sm); display:grid; place-items:center}
+  .stagectl button:hover{background:var(--surface-2)}
+  .hint{position:absolute; left:14px; bottom:14px; font-size:12px; color:var(--faint); background:var(--surface); border:1px solid var(--hairline); border-radius:999px; padding:5px 12px; pointer-events:none; z-index:3}
+  .empty{position:absolute; inset:0; display:none; place-items:center; color:var(--muted); font-size:14px; pointer-events:none}
+  .empty.show{display:grid}
+  .tooltip{position:absolute; z-index:5; max-width:300px; background:var(--surface); color:var(--ink); border:1px solid var(--hairline); border-radius:12px; box-shadow:var(--shadow); padding:11px 13px; pointer-events:none; opacity:0; transform:translateY(4px); transition:opacity .12s, transform .12s; font-size:12.5px; line-height:1.45}
+  .tooltip.show{opacity:1; transform:none}
+  .tooltip .tt-h{display:flex; align-items:center; gap:8px; margin-bottom:5px}
+  .tooltip .tt-id{font-family:var(--mono); font-size:10px; color:#fff; padding:2px 7px; border-radius:6px}
+  .tooltip .tt-th{font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .tooltip .tt-t{font-weight:600; font-size:13.5px; line-height:1.3; margin-bottom:4px}
+  .tooltip .tt-b{color:var(--muted); display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden}
+  .tooltip .tt-p{margin-top:6px; font-family:var(--mono); font-size:10.5px; color:var(--faint)}
 
-  /* ---- detail panel ---- */
-  .panel{
-    position:absolute; top:12px; right:12px; bottom:12px; width:340px; max-width:calc(100% - 24px);
-    background:var(--surface); border:1px solid var(--hairline); border-radius:14px;
-    box-shadow:var(--shadow); z-index:4; display:flex; flex-direction:column;
-    transform:translateX(calc(100% + 20px)); transition:transform .26s cubic-bezier(.2,.7,.2,1);
-    overflow:hidden;
-  }
-  .panel.open{transform:none}
-  .panel .ph{display:flex; align-items:flex-start; gap:10px; padding:16px 16px 12px}
-  .panel .idtag{
-    font-family:var(--mono); font-size:11px; letter-spacing:.04em; color:#fff;
-    padding:3px 8px; border-radius:6px; flex:none; font-weight:600;
-  }
-  .panel .closex{margin-left:auto; border:0; background:transparent; color:var(--muted);
-    font-size:20px; line-height:1; cursor:pointer; padding:2px 4px; border-radius:6px}
-  .panel .closex:hover{background:var(--surface-2); color:var(--ink)}
-  .panel .pbody{padding:0 16px 18px; overflow-y:auto}
-  .panel h2{margin:2px 0 10px; font-size:16.5px; line-height:1.3; letter-spacing:-.01em; text-wrap:balance}
-  .panel .themeline{font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:14px}
+  /* ---------- panel ---------- */
+  .pwrap{padding:18px 18px 28px}
+  .ph{display:flex; align-items:center; gap:8px; margin-bottom:10px}
+  .idtag{font-family:var(--mono); font-size:11px; color:#fff; padding:3px 9px; border-radius:7px; font-weight:500}
+  .kind{font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+  .closex{margin-left:auto; border:0; background:transparent; color:var(--muted); font-size:18px; width:30px; height:30px; border-radius:8px; cursor:pointer; display:grid; place-items:center}
+  .closex:hover{background:var(--surface-2); color:var(--ink)}
+  .panel h2{margin:0 0 6px; font-size:19px; line-height:1.25; letter-spacing:-.015em; font-weight:650; text-wrap:balance}
+  .themeline{font-size:12.5px; margin-bottom:12px; font-weight:500}
   .meta{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px}
-  .pill{font-size:11.5px; padding:3px 9px; border-radius:999px; background:var(--surface-2); border:1px solid var(--hairline); color:var(--muted)}
-  .pill.consensus{border-color:var(--accent); color:var(--accent); font-weight:600}
+  .pill{font-size:11.5px; padding:3px 9px; border-radius:999px; background:var(--surface-2); border:1px solid var(--hairline); color:var(--muted); white-space:nowrap}
+  .pill.consensus{border-color:var(--accent); color:var(--accent); font-weight:600; background:var(--accent-soft)}
   .pill .who{color:var(--ink)}
-  .psub{font-family:var(--mono); font-size:10px; letter-spacing:.13em; text-transform:uppercase; color:var(--faint); margin:16px 0 8px}
-  .blurb{font-size:14px; color:var(--ink); line-height:1.55}
-  .conns{display:flex; flex-direction:column; gap:5px}
-  .conn{display:flex; align-items:center; gap:8px; width:100%; text-align:left; cursor:pointer;
-    background:var(--surface-2); border:1px solid var(--hairline); border-radius:8px; padding:7px 9px; font:inherit; color:var(--ink)}
-  .conn:hover{border-color:var(--muted)}
-  .conn .rel{font-family:var(--mono); font-size:9.5px; letter-spacing:.03em; text-transform:uppercase; padding:2px 6px; border-radius:5px; flex:none; color:#fff}
-  .conn .rel.reinforce{background:var(--edge-reinforce)} .conn .rel.relate{background:var(--edge-relate)} .conn .rel.tension{background:var(--edge-tension)}
-  .conn .cid{font-family:var(--mono); font-size:11px; color:var(--muted); flex:none}
-  .conn .ct{font-size:12.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .pill.st{text-transform:capitalize}
+  .pill.st-shipping{border-color:var(--t-own); color:var(--t-own)}
+  .pill.st-announced,.pill.st-building,.pill.st-exploring{border-color:var(--t-exec); color:var(--t-exec)}
+  .pill.st-dead,.pill.st-dropped{border-color:var(--t-ops); color:var(--t-ops); text-decoration:line-through}
+  .pill.st-acquired,.pill.st-idea{border-color:var(--accent); color:var(--accent)}
+  .pill.rc{font-family:var(--mono); font-size:10.5px}
+  .pill.rc-working{border-color:var(--t-own); color:var(--t-own)}
+  .pill.rc-early{border-color:var(--t-exec); color:var(--t-exec)}
+  .pill.rc-mixed{border-color:var(--accent); color:var(--accent)}
+  .pill.rc-unproven{border-color:var(--faint); color:var(--muted)}
+  .pill.rc-hype,.pill.rc-dead{border-color:var(--t-ops); color:var(--t-ops)}
+  .pill.new{border-color:var(--accent); color:var(--accent); font-family:var(--mono); font-size:10.5px}
+  .blurb{margin:0 0 12px; font-size:14px; line-height:1.6; color:var(--ink)}
+  .dates{display:flex; flex-wrap:wrap; gap:4px 12px; margin:0 0 16px; font-family:var(--mono); font-size:10.5px; color:var(--muted)}
+  .dates b{font-weight:500; color:var(--faint); text-transform:uppercase; letter-spacing:.06em; font-size:9.5px; margin-right:4px}
+  .psub{font-family:var(--mono); font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--faint); margin:16px 0 8px}
+  .conns{display:flex; flex-direction:column; gap:4px}
+  .conn{display:grid; grid-template-columns:auto 1fr; gap:3px 10px; align-items:center; text-align:left; border:1px solid var(--hairline); background:var(--surface); border-radius:10px; padding:8px 10px; cursor:pointer; width:100%}
+  .conn:hover{background:var(--surface-2)}
+  .conn .rel{font-family:var(--mono); font-size:10px; letter-spacing:.04em; text-transform:uppercase; padding:2px 6px; border-radius:5px; color:#fff; grid-row:span 2; align-self:start; margin-top:2px}
+  .conn .rel.reinforce{background:var(--edge-reinforce)} .conn .rel.relate{background:var(--faint)} .conn .rel.tension{background:var(--edge-tension)} .conn .rel.evidence{background:var(--edge-evidence)}
+  .conn .ct{font-size:13px; font-weight:500; line-height:1.3}
+  .conn .cid{font-family:var(--mono); font-size:10.5px; color:var(--faint)}
   .srclinks{display:flex; flex-direction:column; gap:8px}
-  .srclinks .s{font-size:12px}
+  .srclinks .s{font-size:12.5px; line-height:1.45; padding:9px 11px; border-radius:10px; background:var(--surface-2)}
   .srclinks .s .who{font-weight:600}
-  .srclinks .s a{font-family:var(--mono); font-size:10px; margin-right:10px}
+  .srclinks .s .tt{color:var(--muted)}
+  .srclinks .s .lk{display:flex; gap:12px; margin-top:4px; align-items:center}
+  .srclinks .s .lk a{font-family:var(--mono); font-size:10.5px; text-decoration:none}
+  .srclinks .s .dt{font-family:var(--mono); font-size:10px; color:var(--faint)}
+  /* overview */
+  .ov h3{margin:0 0 4px; font-size:16px; font-weight:650; letter-spacing:-.01em}
+  .ov .lead{margin:0 0 14px; color:var(--muted); font-size:13px; line-height:1.5}
+  .ovlist{display:flex; flex-direction:column; gap:4px; margin-bottom:6px}
+  .ovrow{display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:center; border:1px solid var(--hairline); background:var(--surface); border-radius:10px; padding:8px 10px; cursor:pointer; text-align:left; width:100%}
+  .ovrow:hover{background:var(--surface-2)}
+  .ovrow .sh{width:12px; height:12px; flex:none}
+  .ovrow .sh.ci{border-radius:50%} .ovrow .sh.sq{border-radius:3px} .ovrow .sh.di{transform:rotate(45deg) scale(.85)}
+  .ovrow .t{font-size:13px; font-weight:500; line-height:1.3; min-width:0}
+  .ovrow .t small{display:block; font-family:var(--mono); font-size:10.5px; color:var(--faint); font-weight:400; margin-top:1px}
+  .ovrow .r{font-family:var(--mono); font-size:11px; color:var(--accent); white-space:nowrap}
+  .ovrow .r.dt{color:var(--faint)}
 
+  /* ---------- list view ---------- */
+  .ltools{display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap}
+  .ltools .count{font-size:13px; color:var(--muted)}
+  .ltools select{font:inherit; font-size:13px; padding:6px 10px; border-radius:9px; border:1px solid var(--hairline); background:var(--surface); color:var(--ink)}
+  .lgroup{margin:0 0 22px}
+  .lgroup h3{margin:0 0 8px; font-size:12px; font-family:var(--mono); letter-spacing:.09em; text-transform:uppercase; display:flex; align-items:center; gap:8px}
+  .lgroup h3 .sw{width:10px; height:10px; border-radius:3px}
+  .lgroup h3 .n{color:var(--faint); font-weight:400}
+  .lrows{display:flex; flex-direction:column; gap:6px}
+  .lrow{display:grid; grid-template-columns:18px 1fr auto; gap:12px; align-items:start; border:1px solid var(--hairline); background:var(--surface); border-radius:12px; padding:11px 14px; cursor:pointer; text-align:left; width:100%}
+  .lrow:hover{background:var(--surface-2)}
+  .lrow.selected{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+  .lrow .sh{width:14px; height:14px; margin-top:3px}
+  .lrow .sh.ci{border-radius:50%} .lrow .sh.sq{border-radius:3px} .lrow .sh.di{transform:rotate(45deg) scale(.85)}
+  .lrow .sh.ring{box-shadow:0 0 0 2px var(--surface), 0 0 0 3.5px var(--accent)}
+  .lrow .t{font-size:14px; font-weight:600; line-height:1.3; letter-spacing:-.005em}
+  .lrow .t .id{font-family:var(--mono); font-size:10.5px; color:var(--faint); font-weight:400; margin-right:8px}
+  .lrow .b{font-size:12.5px; color:var(--muted); margin-top:3px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.45}
+  .lrow .m{display:flex; flex-wrap:wrap; gap:5px; margin-top:7px}
+  .lrow .right{display:flex; flex-direction:column; align-items:flex-end; gap:5px; white-space:nowrap}
+  .lrow .score{font-family:var(--mono); font-size:11px; color:var(--accent)}
+  .lrow .score.one{color:var(--faint)}
+  .lrow .dt{font-family:var(--mono); font-size:10.5px; color:var(--faint)}
+  .lrow.hidden{display:none}
+  .lgroup.hidden{display:none}
+  .lempty{color:var(--muted); font-size:14px; padding:30px 0; text-align:center}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:1180px){
+    .app{grid-template-columns:248px minmax(0,1fr)}
+    aside.panel{position:fixed; right:12px; top:70px; bottom:12px; width:min(400px, calc(100% - 24px)); border:1px solid var(--hairline); border-radius:14px; box-shadow:var(--shadow); transform:translateX(calc(100% + 24px)); transition:transform .22s ease; z-index:7}
+    aside.panel.open{transform:none}
+    .brand .sub{display:none}
+  }
   @media (max-width:820px){
     body{overflow:auto}
-    .app{flex-direction:column; height:auto}
-    .controls{width:100%; border-right:0; border-bottom:1px solid var(--hairline); max-height:none}
-    .stage{height:68vh; min-height:420px}
-    .panel{width:auto; left:12px; top:auto; height:56%}
-    .panel{transform:translateY(calc(100% + 20px))}
-    .panel.open{transform:none}
+    header.top{flex-wrap:wrap; min-height:auto}
+    .updated{display:none}
+    .app{display:block; height:auto}
+    aside.side{border-right:0; border-bottom:1px solid var(--hairline); max-height:none; padding:12px 16px}
+    .stats{grid-template-columns:repeat(4,1fr)}
+    main.stage{height:68vh}
+    section.list{padding:14px 16px 40px}
+    aside.panel{top:auto; left:12px; right:12px; bottom:12px; width:auto; height:60vh; transform:translateY(calc(100% + 20px))}
+    aside.panel.open{transform:none}
+    .hint{display:none}
   }
   @media (prefers-reduced-motion:reduce){
-    .panel{transition:none} .edge,.node .body,.node text{transition:none}
+    aside.panel,.tooltip,.edge,.node .body,.node text{transition:none}
   }
 </style>
+</head>
+<body>
 
 <header class="top">
   <div class="brand">
-    <h1><span class="dot"></span>Agentic Company · Idea Graph</h1>
-    <span class="sub">Actionable ideas from founder talks, plus the patterns &amp; products making them real — mapped, weighted by consensus, dated, cross-linked.</span>
+    <div class="logo">AC</div>
+    <h1>Idea Graph <span class="sub">Founder-talk advice and the real-world patterns and products that make it real. Weighted by consensus, dated, cross-linked.</span></h1>
   </div>
-  <div class="stats" id="stats"></div>
   <div class="spacer"></div>
-  <button class="iconbtn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
-    <span id="themeIcon">◐</span><span id="themeTxt">Theme</span>
-  </button>
+  <div class="viewswitch" role="group" aria-label="View">
+    <button id="viewGraph" aria-pressed="true">◉ Graph</button>
+    <button id="viewList" aria-pressed="false">☰ List</button>
+  </div>
+  <span class="updated" id="updated"></span>
+  <button class="iconbtn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme"><span id="themeIcon">◐</span></button>
 </header>
 
 <div class="app">
-  <aside class="controls">
-    <div class="ctl-group">
-      <p class="ctl-label">Search</p>
-      <input class="search" id="search" type="search" placeholder="Filter ideas, people, IDs…" autocomplete="off">
+  <aside class="side">
+    <div class="stats" id="stats"></div>
+
+    <div class="group">
+      <div class="searchwrap"><span class="ico">⌕</span><input class="search" id="search" type="search" placeholder="Search ideas, products, people…" autocomplete="off"><span class="kbd">/</span></div>
     </div>
 
-    <div class="ctl-group">
-      <p class="ctl-label">Consensus <span style="text-transform:none;letter-spacing:0">min. speakers</span></p>
+    <div class="group">
+      <p class="label">Layers</p>
+      <div class="layers" id="layerSeg">
+        <button class="layer" data-layer="idea" aria-pressed="true"><b><span class="sw" style="background:var(--t-loops)"></span>Advice</b><span>from talks</span><span class="n"></span></button>
+        <button class="layer" data-layer="world" aria-pressed="true"><b><span class="sw" style="background:var(--t-world)"></span>World</b><span>in the wild</span><span class="n"></span></button>
+      </div>
+    </div>
+
+    <div class="group">
+      <p class="label">Consensus <span style="letter-spacing:0;text-transform:none;color:var(--faint)">· min. independent voices</span></p>
       <div class="seg" id="consensusSeg" role="group" aria-label="Minimum consensus">
         <button data-min="1" aria-pressed="true">All</button>
-        <button data-min="2" aria-pressed="false">≥ 2</button>
-        <button data-min="3" aria-pressed="false">≥ 3</button>
+        <button data-min="2" aria-pressed="false">2+</button>
+        <button data-min="3" aria-pressed="false">3+</button>
       </div>
     </div>
 
-    <div class="ctl-group">
-      <p class="ctl-label">Layers</p>
-      <div class="seg" id="layerSeg" role="group" aria-label="Layers">
-        <button data-layer="idea" aria-pressed="true">Advice<span class="cnt"></span></button>
-        <button data-layer="world" aria-pressed="true" title="Patterns, products and opportunities">World<span class="cnt"></span></button>
-      </div>
-    </div>
-
-    <div class="ctl-group">
-      <p class="ctl-label">Themes <button id="allThemes" style="all:unset;cursor:pointer;color:var(--link);font-size:11px;letter-spacing:0;text-transform:none">reset</button></p>
+    <div class="group">
+      <p class="label">Themes <button class="act" id="allThemes">reset</button></p>
       <div class="chips" id="themeChips"></div>
     </div>
 
-    <div class="ctl-group">
-      <p class="ctl-label">Links</p>
+    <details class="fold" open>
+      <summary>Legend</summary>
       <div class="legend">
+        <div class="row"><i class="ci"></i> advice (from a talk) · pattern</div>
+        <div class="row"><i class="sq"></i> product — has status + reality check</div>
+        <div class="row"><i class="dia"></i> opportunity — a gap to build into</div>
+        <div class="row"><i class="ci big"></i> bigger + gold ring = more independent voices</div>
+        <div class="row"><i class="nd"></i> added in the latest batch</div>
         <div class="row"><span class="line rn"></span> reinforces / builds on</div>
         <div class="row"><span class="line rl"></span> relates / compares</div>
         <div class="row"><span class="line rt"></span> tension to hold</div>
         <div class="row"><span class="line rv"></span> evidence for / demonstrates</div>
       </div>
-    </div>
+    </details>
 
-    <div class="ctl-group">
-      <p class="ctl-label">Consensus weight</p>
-      <div class="legend">
-        <div class="row sz"><i style="width:12px;height:12px"></i> 1 speaker / source</div>
-        <div class="row sz"><i style="width:18px;height:18px"></i><span class="ring"></span> 2 speakers</div>
-        <div class="row sz"><i style="width:24px;height:24px"></i><span class="ring" style="width:18px;height:18px"></span> 3 speakers</div>
-      </div>
-    </div>
-
-    <div class="ctl-group">
-      <p class="ctl-label">Node kinds</p>
-      <div class="legend">
-        <div class="row sz"><i style="width:14px;height:14px"></i> advice (talk) · pattern</div>
-        <div class="row sz"><i class="sq"></i> product — evidence; status + reality check</div>
-        <div class="row sz"><i class="dia"></i> opportunity — a gap to build into</div>
-      </div>
-    </div>
-
-    <div class="ctl-group">
-      <p class="ctl-label">Sources</p>
-      <div class="sources" id="sources"></div>
-      <p class="note">A living map. As new talks are added to <code style="font-family:var(--mono);font-size:11px">actionable-ideas.md</code>, ideas and consensus weights grow here too. The <em>Patterns &amp; products</em> layer mirrors <code style="font-family:var(--mono);font-size:11px">patterns-and-products.md</code> — those nodes carry an as-of date, because the ground moves fast.</p>
-    </div>
+    <details class="fold">
+      <summary>Sources</summary>
+      <div id="sources"></div>
+      <p class="note">A living map. Advice mirrors <code>actionable-ideas.md</code>; the World layer mirrors <code>patterns-and-products.md</code>, where every product carries an as-of date and a reality check.</p>
+    </details>
   </aside>
 
   <main class="stage">
@@ -351,15 +359,28 @@
         <marker id="ar-tension" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--edge-tension)"/></marker>
         <marker id="ar-evidence" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--edge-evidence)"/></marker>
       </defs>
-      <g id="viewport">
-        <g id="edges"></g>
-        <g id="nodes"></g>
-      </g>
+      <g id="viewport"><g id="edges"></g><g id="nodes"></g></g>
     </svg>
-    <div class="hint">hover a node for its idea · click for full detail · scroll to zoom · drag to pan</div>
+    <div class="empty" id="empty">Nothing matches the current filters.</div>
+    <div class="stagectl">
+      <button id="zoomIn" title="Zoom in" aria-label="Zoom in">+</button>
+      <button id="zoomOut" title="Zoom out" aria-label="Zoom out">−</button>
+      <button id="zoomFit" title="Fit to view" aria-label="Fit to view">⌖</button>
+    </div>
+    <div class="hint">hover for a summary · click for detail · scroll to zoom · drag to pan</div>
     <div class="tooltip" id="tip" role="tooltip"></div>
-    <section class="panel" id="panel" aria-live="polite"></section>
   </main>
+
+  <section class="list" id="list" aria-label="List view">
+    <div class="ltools">
+      <span class="count" id="lcount"></span>
+      <span class="spacer"></span>
+      <label style="font-size:12.5px;color:var(--muted)">Sort <select id="lsort"><option value="theme">by theme</option><option value="score">by consensus</option><option value="date">newest first</option></select></label>
+    </div>
+    <div id="lbody"></div>
+  </section>
+
+  <aside class="panel" id="panel" aria-live="polite"></aside>
 </div>
 
 <script>
@@ -407,79 +428,79 @@
   // World layer nodes — mirrors patterns-and-products.md
   // k: "pattern" | "product" | "opp" · st: status · asof: last verified · ad/up: added/updated · p: independent orgs/people · src: W# refs
   var WORLD = [
-    {id:"PAT-1", k:"pattern", g:"world", p:["Isha Foundation","Salesforce","OpenAI"], s:3, src:["W1","W3","W7"], ad:"2026-11-07", b:"The assistant is the front door: products ship inside ChatGPT / Claude instead of (or before) their own UI. A meditation app in the ChatGPT app store, a CRM as a Claude plugin, ~300 partner integrations. Reality check: supply is real, but distribution through the assistant is still weak (little traffic, poor discoverability)."},
-    {id:"PAT-2", k:"pattern", g:"world", p:["Salesforce","OpenAI"], s:2, src:["W5","W6","W8","W2"], ad:"2026-11-07", b:"Systems of record go headless: the whole platform exposed as APIs + MCP tools + CLI so agents, not humans in a browser, do the work ('our API is the UI'). OpenAI builds the consuming side: ChatGPT, Codex and the API reach private MCP servers inside the company network. Usage is real but vendor-reported; pricing unfinished."},
-    {id:"PAT-3", k:"pattern", g:"world", p:["OpenAI","Salesforce","Anthropic"], s:3, src:["W2","W5","W3"], ad:"2026-11-07", b:"MCP is the connective tissue between agents and systems: OpenAI products consume it (incl. private servers), Salesforce exposes its platform through it, Anthropic's Claude plugs into Salesforce through it. Build every tool as an MCP server; assume every agent will speak it."},
-    {id:"PAT-4", k:"pattern", g:"world", p:["OpenAI","Salesforce"], s:2, src:["W2","W3","W5"], ad:"2026-11-07", b:"Governed agent access: outbound-only tunnels, permissions inherited per user, audit trails, and testing / tracing / eval tools shipped alongside. Governance is part of the product, not an afterthought, and analysts say the vendor versions still need supplementing for 12-18 months."},
-    {id:"PAT-5", k:"pattern", g:"world", p:["Salesforce"], s:1, src:["W8","W9"], ad:"2026-11-07", b:"Consumption pricing replaces seats as agents do the work. Salesforce calls headless usage a 'fourth monetization vector' and prices by consumption, with inference bought separately from Anthropic. 'Burn tokens, not headcount' is becoming vendor pricing reality, and the pricing is explicitly unfinished."},
-    {id:"PROD-1", k:"product", g:"world", p:["Isha Foundation"], s:1, src:["W1"], st:"shipping", rc:"unproven", asof:"2026-11-07", ad:"2026-11-07", b:"Miracle of Mind in ChatGPT (Isha Foundation): Sadhguru's 7-minute meditation app distributed inside ChatGPT via the app store; prompt 'Meditate'. The standalone app is real and large (1M downloads in 15 hours, 2025); no usage data exists for the ChatGPT channel."},
-    {id:"PROD-2", k:"product", g:"world", p:["OpenAI"], s:1, src:["W2","W11"], st:"shipping", rc:"early", asof:"2026-11-07", ad:"2026-11-07", b:"OpenAI Secure MCP Tunnel (open-source tunnel-client): lets private MCP servers serve ChatGPT, Codex and the Responses API over outbound-only HTTPS. Defaults: 600 req/min, 10 MiB, 120 s. Works per setup guides; forum reports of creation failures (fixed) and HTTP 424s; needs a Business/Enterprise workspace."},
-    {id:"PROD-3", k:"product", g:"world", p:["Salesforce"], s:1, src:["W5","W6","W8"], st:"shipping", rc:"mixed", asof:"2026-11-07", ad:"2026-11-07", b:"Salesforce Headless 360 (TDX, 2026-04-15): Data 360, Agentforce and Slack exposed as APIs, MCP tools and CLI; Vibes 2.0, DevOps Center MCP, Session Tracing GA. Vendor-reported 4.5M MCP calls and ~1T API calls. Analysts: no pricing or MCP SLAs, lock-in, governance tools early, history of v1 tools failing in the real world."},
-    {id:"PROD-4", k:"product", g:"world", p:["Salesforce","Anthropic"], s:2, src:["W3","W9"], st:"announced", rc:"unproven", asof:"2026-11-07", ad:"2026-11-07", b:"Claudeforce / Salesforce in Claude: a Claude Cowork plugin with 37 prebuilt sales skills on live CRM data, inheriting Salesforce permissions via MCP. Pilot customers only; open beta was planned for Sep 2026 (not verified). No reliability data; pricing split across two vendors; analysts call the payoff unclear."},
-    {id:"PROD-5", k:"product", g:"world", p:["Salesforce"], s:1, src:["W10"], st:"shipping", rc:"mixed", asof:"2026-11-07", ad:"2026-11-07", b:"Salesforce Agentforce, the platform under Headless 360 and Claudeforce. Background check: 29k deals claimed but a minority in production; Bernstein downgrade (Jul 2026) and KeyBanc cite weak traction; customers' data 'not organized well enough'; G2: setup complexity, credit pricing. The bottleneck is data readiness, not the agent."},
-    {id:"PROD-6", k:"product", g:"world", p:["OpenAI"], s:1, src:["W7","W1"], st:"shipping", rc:"mixed", asof:"2026-11-07", ad:"2026-11-07", b:"ChatGPT apps + App Directory (OpenAI): third-party apps inside ChatGPT (Apps SDK Oct 2025, directory Dec 2025). ~300 integrations by Mar 2026, but hard to find, little partner traffic, slow approvals; OpenAI concedes the developer experience 'needs to improve'."},
-    {id:"OPP-1", k:"opp", g:"world", p:["Salesforce","OpenAI"], s:2, src:["W6","W2"], st:"idea", asof:"2026-11-07", ad:"2026-11-07", b:"Build agent-first from day one: our product is an MCP/API surface first and a UI second, reachable from ChatGPT, Claude, Codex and Cursor before it has a web app. Incumbents are retrofitting this at great cost and being asked what they are once the interface commoditises; we can start there."},
-    {id:"OPP-2", k:"opp", g:"world", p:["Info-Tech (Bickley)","OpenAI community"], s:2, src:["W5","W11"], st:"idea", asof:"2026-11-07", ad:"2026-11-07", b:"Vendor-neutral governed agent access for mid-size companies: OpenAI's tunnel serves only OpenAI products and needs an enterprise workspace, Salesforce's governance covers only Salesforce, analysts say vendor governance needs supplementing for 12-18 months. One self-hosted gateway (tunnel + inherited permissions + tracing + evals) for any agent is open."},
-    {id:"OPP-3", k:"opp", g:"world", p:["Bloomberg / PYMNTS"], s:1, src:["W7"], st:"idea", asof:"2026-11-07", ad:"2026-11-07", b:"Distribution inside assistants is unsolved: the ChatGPT app channel sends partners little traffic and is hard to search; even Isha has to email its list to say its app exists in ChatGPT. Agent-era discovery (how an assistant picks which tool to invoke) is the new storefront and nobody owns it yet. Log, don't build, until it firms up."}
+    {id:"PAT-1", t:"The assistant is the front door", k:"pattern", g:"world", p:["Isha Foundation","Salesforce","OpenAI"], s:3, src:["W1","W3","W7"], ad:"2026-11-07", b:"The assistant is the front door: products ship inside ChatGPT / Claude instead of (or before) their own UI. A meditation app in the ChatGPT app store, a CRM as a Claude plugin, ~300 partner integrations. Reality check: supply is real, but distribution through the assistant is still weak (little traffic, poor discoverability)."},
+    {id:"PAT-2", t:"Systems of record go headless: \"our API is the UI\"", k:"pattern", g:"world", p:["Salesforce","OpenAI"], s:2, src:["W5","W6","W8","W2"], ad:"2026-11-07", b:"Systems of record go headless: the whole platform exposed as APIs + MCP tools + CLI so agents, not humans in a browser, do the work ('our API is the UI'). OpenAI builds the consuming side: ChatGPT, Codex and the API reach private MCP servers inside the company network. Usage is real but vendor-reported; pricing unfinished."},
+    {id:"PAT-3", t:"MCP is the connective tissue between agents and systems", k:"pattern", g:"world", p:["OpenAI","Salesforce","Anthropic"], s:3, src:["W2","W5","W3"], ad:"2026-11-07", b:"MCP is the connective tissue between agents and systems: OpenAI products consume it (incl. private servers), Salesforce exposes its platform through it, Anthropic's Claude plugs into Salesforce through it. Build every tool as an MCP server; assume every agent will speak it."},
+    {id:"PAT-4", t:"Governed agent access: tunnels, inherited permissions, audit", k:"pattern", g:"world", p:["OpenAI","Salesforce"], s:2, src:["W2","W3","W5"], ad:"2026-11-07", b:"Governed agent access: outbound-only tunnels, permissions inherited per user, audit trails, and testing / tracing / eval tools shipped alongside. Governance is part of the product, not an afterthought, and analysts say the vendor versions still need supplementing for 12-18 months."},
+    {id:"PAT-5", t:"Consumption pricing replaces seats as agents do the work", k:"pattern", g:"world", p:["Salesforce"], s:1, src:["W8","W9"], ad:"2026-11-07", b:"Consumption pricing replaces seats as agents do the work. Salesforce calls headless usage a 'fourth monetization vector' and prices by consumption, with inference bought separately from Anthropic. 'Burn tokens, not headcount' is becoming vendor pricing reality, and the pricing is explicitly unfinished."},
+    {id:"PROD-1", t:"Miracle of Mind in ChatGPT", k:"product", g:"world", p:["Isha Foundation"], s:1, src:["W1"], st:"shipping", rc:"unproven", asof:"2026-11-07", ad:"2026-11-07", b:"Miracle of Mind in ChatGPT (Isha Foundation): Sadhguru's 7-minute meditation app distributed inside ChatGPT via the app store; prompt 'Meditate'. The standalone app is real and large (1M downloads in 15 hours, 2025); no usage data exists for the ChatGPT channel."},
+    {id:"PROD-2", t:"Secure MCP Tunnel / tunnel-client", k:"product", g:"world", p:["OpenAI"], s:1, src:["W2","W11"], st:"shipping", rc:"early", asof:"2026-11-07", ad:"2026-11-07", b:"OpenAI Secure MCP Tunnel (open-source tunnel-client): lets private MCP servers serve ChatGPT, Codex and the Responses API over outbound-only HTTPS. Defaults: 600 req/min, 10 MiB, 120 s. Works per setup guides; forum reports of creation failures (fixed) and HTTP 424s; needs a Business/Enterprise workspace."},
+    {id:"PROD-3", t:"Headless 360", k:"product", g:"world", p:["Salesforce"], s:1, src:["W5","W6","W8"], st:"shipping", rc:"mixed", asof:"2026-11-07", ad:"2026-11-07", b:"Salesforce Headless 360 (TDX, 2026-04-15): Data 360, Agentforce and Slack exposed as APIs, MCP tools and CLI; Vibes 2.0, DevOps Center MCP, Session Tracing GA. Vendor-reported 4.5M MCP calls and ~1T API calls. Analysts: no pricing or MCP SLAs, lock-in, governance tools early, history of v1 tools failing in the real world."},
+    {id:"PROD-4", t:"Claudeforce / Salesforce in Claude", k:"product", g:"world", p:["Salesforce","Anthropic"], s:2, src:["W3","W9"], st:"announced", rc:"unproven", asof:"2026-11-07", ad:"2026-11-07", b:"Claudeforce / Salesforce in Claude: a Claude Cowork plugin with 37 prebuilt sales skills on live CRM data, inheriting Salesforce permissions via MCP. Pilot customers only; open beta was planned for Sep 2026 (not verified). No reliability data; pricing split across two vendors; analysts call the payoff unclear."},
+    {id:"PROD-5", t:"Agentforce", k:"product", g:"world", p:["Salesforce"], s:1, src:["W10"], st:"shipping", rc:"mixed", asof:"2026-11-07", ad:"2026-11-07", b:"Salesforce Agentforce, the platform under Headless 360 and Claudeforce. Background check: 29k deals claimed but a minority in production; Bernstein downgrade (Jul 2026) and KeyBanc cite weak traction; customers' data 'not organized well enough'; G2: setup complexity, credit pricing. The bottleneck is data readiness, not the agent."},
+    {id:"PROD-6", t:"ChatGPT apps + App Directory", k:"product", g:"world", p:["OpenAI"], s:1, src:["W7","W1"], st:"shipping", rc:"mixed", asof:"2026-11-07", ad:"2026-11-07", b:"ChatGPT apps + App Directory (OpenAI): third-party apps inside ChatGPT (Apps SDK Oct 2025, directory Dec 2025). ~300 integrations by Mar 2026, but hard to find, little partner traffic, slow approvals; OpenAI concedes the developer experience 'needs to improve'."},
+    {id:"OPP-1", t:"Build agent-first from day one: MCP/API surface first, UI second", k:"opp", g:"world", p:["Salesforce","OpenAI"], s:2, src:["W6","W2"], st:"idea", asof:"2026-11-07", ad:"2026-11-07", b:"Build agent-first from day one: our product is an MCP/API surface first and a UI second, reachable from ChatGPT, Claude, Codex and Cursor before it has a web app. Incumbents are retrofitting this at great cost and being asked what they are once the interface commoditises; we can start there."},
+    {id:"OPP-2", t:"Vendor-neutral governed agent access for mid-size companies", k:"opp", g:"world", p:["Info-Tech (Bickley)","OpenAI community"], s:2, src:["W5","W11"], st:"idea", asof:"2026-11-07", ad:"2026-11-07", b:"Vendor-neutral governed agent access for mid-size companies: OpenAI's tunnel serves only OpenAI products and needs an enterprise workspace, Salesforce's governance covers only Salesforce, analysts say vendor governance needs supplementing for 12-18 months. One self-hosted gateway (tunnel + inherited permissions + tracing + evals) for any agent is open."},
+    {id:"OPP-3", t:"Distribution inside assistants is unsolved", k:"opp", g:"world", p:["Bloomberg / PYMNTS"], s:1, src:["W7"], st:"idea", asof:"2026-11-07", ad:"2026-11-07", b:"Distribution inside assistants is unsolved: the ChatGPT app channel sends partners little traffic and is hard to search; even Isha has to email its list to say its app exists in ChatGPT. Agent-era discovery (how an assistant picks which tool to invoke) is the new storefront and nobody owns it yet. Log, don't build, until it firms up."}
   ];
 
   // Talk-advice nodes — mirrors actionable-ideas.md (ad: added · up: updated)
   var NODES = [
-    {id:"LOOP-1", g:"loops", p:["Wang"], s:1, src:["S1"], ad:"2026-08-11", b:"Model the company as feedback loops — a big loop with a human on each edge, and micro-loops inside it. Loops with measurable outputs are automatable; org charts aren't."},
-    {id:"LOOP-2", g:"loops", p:["Wang","Cherny","Blomfield","Hu"], s:4, src:["S1","S4","S5","S6"], ad:"2026-08-11", up:"2026-09-08", b:"Build agentic systems that run & optimize those loops — spend 1,000×–1,000,000× more compute to drive an outcome. Cherny: multi-week runs with thousands of agents. Blomfield/Hu: don't bolt AI on as a copilot — rebuild the whole company as recursive self-improving (closed) loops. Hu: a properly-looped company runs 10×–10,000× faster."},
-    {id:"LOOP-3", g:"loops", p:["Wang"], s:1, src:["S1"], ad:"2026-08-11", b:"The scarce skill is defining the right eval/metric per loop. Right metric → the agent optimizes relentlessly; no clean metric → it can't be handed off."},
-    {id:"LOOP-4", g:"loops", p:["Wang","Tan","Cherny"], s:3, src:["S1","S2","S4"], ad:"2026-08-11", b:"A tiny team + agents can outproduce 100 engineers; the frontier is agent coordination. Wang: swarm > 100 engineers · Tan: revenue-per-person · Cherny: routines on thousands of agents."},
-    {id:"LOOP-5", g:"loops", p:["Wang","Tan"], s:2, src:["S1","S2"], ad:"2026-08-11", b:"The mechanics are mundane: markdown skills + cron + data + a clear goal. 'A smart intern could follow it → an agent can run it.' Don't chase magic."},
+    {id:"LOOP-1", t:"Model the whole company as feedback loops", g:"loops", p:["Wang"], s:1, src:["S1"], ad:"2026-08-11", b:"Model the company as feedback loops — a big loop with a human on each edge, and micro-loops inside it. Loops with measurable outputs are automatable; org charts aren't."},
+    {id:"LOOP-2", t:"Build agentic systems that operate & optimize the loops", g:"loops", p:["Wang","Cherny","Blomfield","Hu"], s:4, src:["S1","S4","S5","S6"], ad:"2026-08-11", up:"2026-09-08", b:"Build agentic systems that run & optimize those loops — spend 1,000×–1,000,000× more compute to drive an outcome. Cherny: multi-week runs with thousands of agents. Blomfield/Hu: don't bolt AI on as a copilot — rebuild the whole company as recursive self-improving (closed) loops. Hu: a properly-looped company runs 10×–10,000× faster."},
+    {id:"LOOP-3", t:"The scarce skill is defining the right eval/metric", g:"loops", p:["Wang"], s:1, src:["S1"], ad:"2026-08-11", b:"The scarce skill is defining the right eval/metric per loop. Right metric → the agent optimizes relentlessly; no clean metric → it can't be handed off."},
+    {id:"LOOP-4", t:"A tiny team + agents can outproduce a large team; coordination is the frontier", g:"loops", p:["Wang","Tan","Cherny"], s:3, src:["S1","S2","S4"], ad:"2026-08-11", b:"A tiny team + agents can outproduce 100 engineers; the frontier is agent coordination. Wang: swarm > 100 engineers · Tan: revenue-per-person · Cherny: routines on thousands of agents."},
+    {id:"LOOP-5", t:"The mechanics are mundane; don't chase magic", g:"loops", p:["Wang","Tan"], s:2, src:["S1","S2"], ad:"2026-08-11", b:"The mechanics are mundane: markdown skills + cron + data + a clear goal. 'A smart intern could follow it → an agent can run it.' Don't chase magic."},
 
-    {id:"ITER-1", g:"exec", p:["Wang","Hodak"], s:2, src:["S1","S3"], ad:"2026-08-11", b:"Iteration rate is the decisive competitive variable. Hodak: 'speed determines success, and speed is determined by infrastructure.' Pick the approach with the shorter feedback loop."},
-    {id:"EXEC-1", g:"exec", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Action produces information — trying something generates data thinking alone can't. When stuck, act; anticipating problems is mostly wasted effort."},
+    {id:"ITER-1", t:"Iteration rate is the decisive competitive variable", g:"exec", p:["Wang","Hodak"], s:2, src:["S1","S3"], ad:"2026-08-11", b:"Iteration rate is the decisive competitive variable. Hodak: 'speed determines success, and speed is determined by infrastructure.' Pick the approach with the shorter feedback loop."},
+    {id:"EXEC-1", t:"Action produces information (when stuck, act)", g:"exec", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Action produces information — trying something generates data thinking alone can't. When stuck, act; anticipating problems is mostly wasted effort."},
 
-    {id:"OVER-1", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"★ Product overhang & hobbling: models can already do far more than products let them. Find an overhang and remove the friction — don't add scaffolding. That gap can be the whole product."},
-    {id:"ELICIT-1", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Elicit, don't specify: give a hard goal + guardrails + a stop condition, then step back. Treat the model like a coworker, not a system you program."},
-    {id:"ELICIT-2", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Verification is the single most important thing people get wrong. Give the model tools to check its own work so it self-corrects instead of drifting."},
-    {id:"HARNESS-1", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Delete & rebuild the harness empirically on every model update — blank the prompt, then add back only instructions that fix observed failures. (Opus 5: cut 80% of the system prompt.)"},
-    {id:"HARNESS-2", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Keep evals stable across model generations as the measuring stick — but on the exponential you saturate them, so keep appending hard cases and rebuild when maxed out."},
-    {id:"ORCH-1", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Dynamic workflows: fan-out across many agents → verify → optionally fan out again. Test-time compute as intelligent task decomposition for genuinely hard problems."},
-    {id:"ORCH-2", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Routines: schedule recurring autonomous agent runs (dead-code cleanup, tests, dedup) so engineers can just ship product and talk to users."},
-    {id:"SEC-1", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"On frontier aligned models, don't over-engineer input sanitization — layered alignment + injection classifiers + interp monitoring handle most threats. (Re-check per model.)"},
+    {id:"OVER-1", t:"Product overhang & \"hobbling\"", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"★ Product overhang & hobbling: models can already do far more than products let them. Find an overhang and remove the friction — don't add scaffolding. That gap can be the whole product."},
+    {id:"ELICIT-1", t:"Elicit, don't specify (treat the model like a coworker)", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Elicit, don't specify: give a hard goal + guardrails + a stop condition, then step back. Treat the model like a coworker, not a system you program."},
+    {id:"ELICIT-2", t:"Verification is the single most important thing", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Verification is the single most important thing people get wrong. Give the model tools to check its own work so it self-corrects instead of drifting."},
+    {id:"HARNESS-1", t:"Delete & rebuild the harness empirically on every model update", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Delete & rebuild the harness empirically on every model update — blank the prompt, then add back only instructions that fix observed failures. (Opus 5: cut 80% of the system prompt.)"},
+    {id:"HARNESS-2", t:"Keep evals across generations, but expect to saturate & discard", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Keep evals stable across model generations as the measuring stick — but on the exponential you saturate them, so keep appending hard cases and rebuild when maxed out."},
+    {id:"ORCH-1", t:"Dynamic workflows: fan-out → verify → fan-out", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Dynamic workflows: fan-out across many agents → verify → optionally fan out again. Test-time compute as intelligent task decomposition for genuinely hard problems."},
+    {id:"ORCH-2", t:"Routines: scheduled autonomous agent runs", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Routines: schedule recurring autonomous agent runs (dead-code cleanup, tests, dedup) so engineers can just ship product and talk to users."},
+    {id:"SEC-1", t:"On frontier aligned models, don't over-engineer input sanitization", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"On frontier aligned models, don't over-engineer input sanitization — layered alignment + injection classifiers + interp monitoring handle most threats. (Re-check per model.)"},
 
-    {id:"OWN-1", g:"own", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Build a Personal AGI you own — an agent on your infra reading your memory, running procedures you wrote. It compounds every day; rented AI only improves when the vendor ships."},
-    {id:"OWN-2", g:"own", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Start your library now: markdown-dump your history — one page per project and per person. 'Your inbox is your moat just lying there.'"},
-    {id:"OWN-3", g:"own", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Skillify relentlessly — convert every one-off into a reusable skill file. 'If you have to ask for something twice, you failed.' The discipline that separates winners from dabblers."},
-    {id:"OWN-4", g:"own", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Curate ruthlessly / build a librarian — provenance, contradiction checks, pruning. 'A brain nobody curates is a garbage dump with great search.' Treat memory as production infra."},
-    {id:"OWN-5", g:"own", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Own your skill files — keep your externalized cognition in your repo, not your employer's. 'Own your skills, because if you don't, your job becomes a skill file.'"},
+    {id:"OWN-1", t:"Build a Personal AGI you own", g:"own", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Build a Personal AGI you own — an agent on your infra reading your memory, running procedures you wrote. It compounds every day; rented AI only improves when the vendor ships."},
+    {id:"OWN-2", t:"Start your library now (this weekend)", g:"own", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Start your library now: markdown-dump your history — one page per project and per person. 'Your inbox is your moat just lying there.'"},
+    {id:"OWN-3", t:"Skillify relentlessly (the discipline that separates winners)", g:"own", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Skillify relentlessly — convert every one-off into a reusable skill file. 'If you have to ask for something twice, you failed.' The discipline that separates winners from dabblers."},
+    {id:"OWN-4", t:"Curate ruthlessly / build a librarian", g:"own", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Curate ruthlessly / build a librarian — provenance, contradiction checks, pruning. 'A brain nobody curates is a garbage dump with great search.' Treat memory as production infra."},
+    {id:"OWN-5", t:"Own your skill files", g:"own", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Own your skill files — keep your externalized cognition in your repo, not your employer's. 'Own your skills, because if you don't, your job becomes a skill file.'"},
 
-    {id:"TECH-1", g:"tech", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Markdown is code — clear English instructions = programming, the compiler is the model. Put non-technical staff on skill files; everyone becomes a manager of agents."},
-    {id:"TECH-2", g:"tech", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Split latent vs deterministic computation — judgment/taste in the model, exact ops (math, SQL, scheduling) in real code the markdown calls."},
-    {id:"TECH-3", g:"tech", p:["Hu"], s:1, src:["S6"], ad:"2026-11-07", b:"Software factories: humans write the spec and the tests that define success; agents generate the implementation and iterate until the tests pass. The human defines what to build and judges the output; the code is the agent's job. Some repos already contain no handwritten code, only specs and test harnesses."},
+    {id:"TECH-1", t:"Markdown is code; everyone becomes a manager of agents", g:"tech", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Markdown is code — clear English instructions = programming, the compiler is the model. Put non-technical staff on skill files; everyone becomes a manager of agents."},
+    {id:"TECH-2", t:"Split latent vs. deterministic computation", g:"tech", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Split latent vs deterministic computation — judgment/taste in the model, exact ops (math, SQL, scheduling) in real code the markdown calls."},
+    {id:"TECH-3", t:"Software factories: humans write the spec + tests, agents write the code", g:"tech", p:["Hu"], s:1, src:["S6"], ad:"2026-11-07", b:"Software factories: humans write the spec and the tests that define success; agents generate the implementation and iterate until the tests pass. The human defines what to build and judges the output; the code is the agent's job. Some repos already contain no handwritten code, only specs and test harnesses."},
 
-    {id:"OPS-1", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"The company's operating system (procurement, accounting, hiring, reviews, budgeting) sets your ceiling. 'Amateurs talk strategy, professionals talk logistics.' Speed is built on boring infrastructure."},
-    {id:"OPS-2", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Budgets over approvals — let people buy within budgets; don't bottleneck a $3k purchase while payroll is $100k/week. Reserve approvals for structural decisions."},
-    {id:"OPS-3", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Cost attribution — map every input cost to a specific project so nothing looks 'free.' Enables pricing, runway math, and prioritization."},
-    {id:"OPS-4", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Build internal tools when commercial ones constrain your workflow (after you've found the constraint). Bonus: integrated internal systems give your agents real company context."},
-    {id:"HIRE-1", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Hire for judgment, horsepower, and agency — not credentials. Design screens to surface those three traits, not pedigree."},
-    {id:"HIRE-2", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"A minimum-viable hiring funnel: distributed company-wide voting → phone screen → open-ended AI-resistant homework → full interview. Each step surfaces different information."},
-    {id:"HIRE-3", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Eigen reviews — every 4–6 weeks ask 'would you re-hire this person today?', weighted by eigenvector centrality; detect collusion via MCMC dropout. A tight org-level feedback loop."},
-    {id:"HIRE-4", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Hire from the scene first, then the extended network, then the public. The best early talent already speaks your language and understands the problem."},
-    {id:"HIRE-5", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Require legible competitive evidence of exceptional ability — chess rating, hackathon wins, Design/Build/Fly, Formula SAE. Self-assessment is unreliable; competition isn't."},
-    {id:"HIRE-6", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"For software roles, test thinking and problem decomposition over coding syntax — AI writes the code now; architecture stays human. Swap leetcode for design questions."},
-    {id:"CULTURE-1", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Startup judgment is oral tradition — you learn it by working beside people with excellent judgment in real stakes. Apprentice at a high-performing company first, or hire people who did."},
-    {id:"FUND-1", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Fund the experiment, not the vision — price the experiments needed to reach your next value-inflection point, then raise ~2× that (20–30% waste is normal)."},
-    {id:"FUND-2", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Push to revenue sooner than feels necessary — fundraising dependence is a recurring existential threat. Revenue reframes you from 'probability of dying' to 'long-term roadmap.'"},
-    {id:"QUERY-1", g:"ops", p:["Blomfield","Hu"], s:2, src:["S5","S6"], ad:"2026-09-08", b:"Make the company legible & queryable to AI — capture everything (Slack, email, docs, operations) so every action leaves a searchable 'artifact' that feeds back into the AI system. Hu: make the company 'queryable' so agents improve across every function. An agent can only improve what it can read."},
-    {id:"TOKEN-1", g:"ops", p:["Blomfield","Hu"], s:2, src:["S5","S6"], ad:"2026-09-08", b:"Burn tokens, not headcount — the constraint shifts from hiring to compute. One person with AI can do the work of ~1,000 engineers. 'If your API bill doesn't make you uncomfortable, you're not doing enough.' Hu coins it 'tokenmaxx, not headcountmaxx' (caveat: more tokens ≠ more impact automatically)."},
-    {id:"ORG-1", g:"ops", p:["Blomfield","Hu"], s:2, src:["S5","S6"], ad:"2026-09-08", b:"Flatten the org — the AI layer makes middle management obsolete. Two human roles remain: ICs who are builders (bring prototypes, not slides) and DRIs with single accountability. Humans handle novel/high-stakes calls. Hu: 'hierarchies break down when an intelligence layer replaces human middleware' (IC / DRI / AI-founder)."},
+    {id:"OPS-1", t:"The company's operating system sets your ceiling", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"The company's operating system (procurement, accounting, hiring, reviews, budgeting) sets your ceiling. 'Amateurs talk strategy, professionals talk logistics.' Speed is built on boring infrastructure."},
+    {id:"OPS-2", t:"Budgets over approvals", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Budgets over approvals — let people buy within budgets; don't bottleneck a $3k purchase while payroll is $100k/week. Reserve approvals for structural decisions."},
+    {id:"OPS-3", t:"Cost attribution (nothing is \"free\")", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Cost attribution — map every input cost to a specific project so nothing looks 'free.' Enables pricing, runway math, and prioritization."},
+    {id:"OPS-4", t:"Build internal tools when commercial ones constrain you", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Build internal tools when commercial ones constrain your workflow (after you've found the constraint). Bonus: integrated internal systems give your agents real company context."},
+    {id:"HIRE-1", t:"Hire for judgment, horsepower, agency — not credentials", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Hire for judgment, horsepower, and agency — not credentials. Design screens to surface those three traits, not pedigree."},
+    {id:"HIRE-2", t:"A minimum-viable hiring funnel (no shortcuts)", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"A minimum-viable hiring funnel: distributed company-wide voting → phone screen → open-ended AI-resistant homework → full interview. Each step surfaces different information."},
+    {id:"HIRE-3", t:"Eigen reviews (continuous, centrality-weighted)", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Eigen reviews — every 4–6 weeks ask 'would you re-hire this person today?', weighted by eigenvector centrality; detect collusion via MCMC dropout. A tight org-level feedback loop."},
+    {id:"HIRE-4", t:"Hire from the scene, then the network, then the public", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Hire from the scene first, then the extended network, then the public. The best early talent already speaks your language and understands the problem."},
+    {id:"HIRE-5", t:"Require legible evidence of exceptional ability", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Require legible competitive evidence of exceptional ability — chess rating, hackathon wins, Design/Build/Fly, Formula SAE. Self-assessment is unreliable; competition isn't."},
+    {id:"HIRE-6", t:"For software roles, test thinking over coding", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"For software roles, test thinking and problem decomposition over coding syntax — AI writes the code now; architecture stays human. Swap leetcode for design questions."},
+    {id:"CULTURE-1", t:"Startup judgment is oral tradition — apprentice first", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Startup judgment is oral tradition — you learn it by working beside people with excellent judgment in real stakes. Apprentice at a high-performing company first, or hire people who did."},
+    {id:"FUND-1", t:"Fund the experiment, not the vision", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Fund the experiment, not the vision — price the experiments needed to reach your next value-inflection point, then raise ~2× that (20–30% waste is normal)."},
+    {id:"FUND-2", t:"Push to revenue sooner than feels necessary", g:"ops", p:["Hodak"], s:1, src:["S3"], ad:"2026-08-11", b:"Push to revenue sooner than feels necessary — fundraising dependence is a recurring existential threat. Revenue reframes you from 'probability of dying' to 'long-term roadmap.'"},
+    {id:"QUERY-1", t:"Make the company legible & queryable to AI", g:"ops", p:["Blomfield","Hu"], s:2, src:["S5","S6"], ad:"2026-09-08", b:"Make the company legible & queryable to AI — capture everything (Slack, email, docs, operations) so every action leaves a searchable 'artifact' that feeds back into the AI system. Hu: make the company 'queryable' so agents improve across every function. An agent can only improve what it can read."},
+    {id:"TOKEN-1", t:"Burn tokens, not headcount", g:"ops", p:["Blomfield","Hu"], s:2, src:["S5","S6"], ad:"2026-09-08", b:"Burn tokens, not headcount — the constraint shifts from hiring to compute. One person with AI can do the work of ~1,000 engineers. 'If your API bill doesn't make you uncomfortable, you're not doing enough.' Hu coins it 'tokenmaxx, not headcountmaxx' (caveat: more tokens ≠ more impact automatically)."},
+    {id:"ORG-1", t:"Flatten the org; the AI layer makes middle management obsolete", g:"ops", p:["Blomfield","Hu"], s:2, src:["S5","S6"], ad:"2026-09-08", b:"Flatten the org — the AI layer makes middle management obsolete. Two human roles remain: ICs who are builders (bring prototypes, not slides) and DRIs with single accountability. Humans handle novel/high-stakes calls. Hu: 'hierarchies break down when an intelligence layer replaces human middleware' (IC / DRI / AI-founder)."},
 
-    {id:"MIND-1", g:"mind", p:["Wang","Hodak"], s:2, src:["S1","S3"], ad:"2026-08-11", b:"Own your judgment — there are no blanket rules. Wang: build your own compass, hold conviction against the crowd. Hodak: you can't delegate judgment; 'there's no set of five bullet points.'"},
-    {id:"MIND-2", g:"mind", p:["Wang"], s:1, src:["S1"], ad:"2026-08-11", b:"Bet on the steepest, longest-running exponential. It looks trivial at the base (cat detectors, early Moore's Law) — judge the curve, not today's value. AI is that exponential now."},
-    {id:"MIND-3", g:"mind", p:["Wang"], s:1, src:["S1"], ad:"2026-08-11", b:"Abstraction layers keep moving up — bet on orchestration, not today's specific skill. From writing code → reviewing it → orchestrating agents."},
-    {id:"MIND-4", g:"mind", p:["Tan","Blomfield"], s:2, src:["S2","S5"], ad:"2026-08-11", up:"2026-09-08", b:"Context/data is the moat, not the model. Weights are commoditized and rented; owned context is unique. 'When everyone's engine is 1,000 hp, the race is won on the driver and the map.' Blomfield: data is precious, software is ephemeral — the code churns, the data compounds."},
-    {id:"MIND-5", g:"mind", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Build disposable, audience-of-one software — exactly what you need, in a weekend. Software needn't be precious; startups increasingly are 'markdown files + a browser.'"},
-    {id:"MIND-6", g:"mind", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"The old constraints (team, funding, permission, credentials) were workarounds for human limits that just expired. 'We can boil the ocean now.' Just start."},
-    {id:"MIND-7", g:"mind", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Optimize for revenue-per-person — a ratio that never existed before ($100M in 8 months with 15 people). Add agents/skills before headcount."},
-    {id:"MIND-8", g:"mind", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Scratch your own itch first — apply the tech to a real problem you have, then generalize. 'Make something you want first, then something people want.'"},
-    {id:"MIND-9", g:"mind", p:["Blomfield","Hu"], s:2, src:["S5","S6"], ad:"2026-09-08", b:"Reject the copilot trap — don't bolt AI on for 20% more productivity; rebuild the company from the ground up for a step-change in capability. Hu: 'AI isn't a tool, it's the operating system your company runs on.' Early founders have the edge: building AI-native from scratch beats an incumbent retrofitting it."},
-    {id:"SKILL-1", g:"mind", p:["Wang","Hu"], s:2, src:["S1","S6"], ad:"2026-08-11", up:"2026-09-08", b:"Get fluent in AI tooling now; early hours compound like Gates/Zuckerberg with early PCs. Hu: leaders can't delegate the belief — sit with the coding agents until you break your own priors about what's possible."}
+    {id:"MIND-1", t:"Own your judgment; there are no blanket rules", g:"mind", p:["Wang","Hodak"], s:2, src:["S1","S3"], ad:"2026-08-11", b:"Own your judgment — there are no blanket rules. Wang: build your own compass, hold conviction against the crowd. Hodak: you can't delegate judgment; 'there's no set of five bullet points.'"},
+    {id:"MIND-2", t:"Bet on the steepest, longest-running exponential", g:"mind", p:["Wang"], s:1, src:["S1"], ad:"2026-08-11", b:"Bet on the steepest, longest-running exponential. It looks trivial at the base (cat detectors, early Moore's Law) — judge the curve, not today's value. AI is that exponential now."},
+    {id:"MIND-3", t:"Bet on orchestration, not today's specific skill", g:"mind", p:["Wang"], s:1, src:["S1"], ad:"2026-08-11", b:"Abstraction layers keep moving up — bet on orchestration, not today's specific skill. From writing code → reviewing it → orchestrating agents."},
+    {id:"MIND-4", t:"Context/data is the moat, not the model", g:"mind", p:["Tan","Blomfield"], s:2, src:["S2","S5"], ad:"2026-08-11", up:"2026-09-08", b:"Context/data is the moat, not the model. Weights are commoditized and rented; owned context is unique. 'When everyone's engine is 1,000 hp, the race is won on the driver and the map.' Blomfield: data is precious, software is ephemeral — the code churns, the data compounds."},
+    {id:"MIND-5", t:"Build disposable, audience-of-one software", g:"mind", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Build disposable, audience-of-one software — exactly what you need, in a weekend. Software needn't be precious; startups increasingly are 'markdown files + a browser.'"},
+    {id:"MIND-6", t:"The old constraints expired — just start", g:"mind", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"The old constraints (team, funding, permission, credentials) were workarounds for human limits that just expired. 'We can boil the ocean now.' Just start."},
+    {id:"MIND-7", t:"Optimize for revenue-per-person (the new unit economics)", g:"mind", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Optimize for revenue-per-person — a ratio that never existed before ($100M in 8 months with 15 people). Add agents/skills before headcount."},
+    {id:"MIND-8", t:"Scratch your own itch first", g:"mind", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Scratch your own itch first — apply the tech to a real problem you have, then generalize. 'Make something you want first, then something people want.'"},
+    {id:"MIND-9", t:"Reject the copilot trap — rebuild for capability, don't bolt AI on", g:"mind", p:["Blomfield","Hu"], s:2, src:["S5","S6"], ad:"2026-09-08", b:"Reject the copilot trap — don't bolt AI on for 20% more productivity; rebuild the company from the ground up for a step-change in capability. Hu: 'AI isn't a tool, it's the operating system your company runs on.' Early founders have the edge: building AI-native from scratch beats an incumbent retrofitting it."},
+    {id:"SKILL-1", t:"Get fluent in AI tooling now; leaders must personally use the agents", g:"mind", p:["Wang","Hu"], s:2, src:["S1","S6"], ad:"2026-08-11", up:"2026-09-08", b:"Get fluent in AI tooling now; early hours compound like Gates/Zuckerberg with early PCs. Hu: leaders can't delegate the belief — sit with the coding agents until you break your own priors about what's possible."}
   ];
 
   var EDGES = [
@@ -521,6 +542,9 @@
     ["OPP-1","PAT-2","reinforce","builds on"],["OPP-1","PAT-3","reinforce","builds on"],["OPP-1","QUERY-1","relate","instance of"],["OPP-2","PAT-4","reinforce","builds on"],["OPP-3","PAT-1","reinforce","builds on"],["OPP-3","PROD-6","relate","gap in"]
   ];
 
+
+
+
   // ----------------------------------------------------------- setup
   NODES.forEach(function(n){ if(!n.k) n.k="idea"; });
   NODES = NODES.concat(WORLD);
@@ -529,6 +553,18 @@
   var byId = {}; NODES.forEach(function(n){ byId[n.id]=n; });
   var css = getComputedStyle(document.documentElement);
   function tcolor(g){ return css.getPropertyValue(GROUPS[g].v).trim(); }
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  function title(n){ return n.t || n.b.split(/[.—]/)[0]; }
+  function kindLabel(n){ return n.k==="idea"?"Advice":n.k==="pattern"?"Pattern":n.k==="product"?"Product":"Opportunity"; }
+  function shapeClass(n){ return n.k==="product"?"sq":n.k==="opp"?"di":"ci"; }
+  function layerOf(n){ return n.k==="idea" ? "idea" : "world"; }
+
+  // "latest batch" = anything added within 45 days of the newest date in the data
+  var allDates = []; NODES.forEach(function(n){ [n.ad,n.up,n.asof].forEach(function(d){ if(d) allDates.push(d); }); });
+  var BUILT = allDates.sort().pop();
+  function toT(d){ return Date.parse(d.length===7 ? d+"-01" : d); }
+  function isNew(n){ return n.ad && (toT(BUILT)-toT(n.ad)) <= 45*86400000; }
+  document.getElementById("updated").innerHTML = "updated <b>"+esc(BUILT)+"</b>";
 
   // adjacency
   var adj = {}; NODES.forEach(function(n){ adj[n.id]=new Set(); });
@@ -550,7 +586,6 @@
   var gViewport=document.getElementById("viewport");
   var gEdges=document.getElementById("edges");
   var gNodes=document.getElementById("nodes");
-
   function mk(tag,attrs){ var e=document.createElementNS(NS,tag); if(attrs) for(var k in attrs) e.setAttribute(k,attrs[k]); return e; }
 
   var edgeEls=EDGES.map(function(e){
@@ -558,18 +593,17 @@
     l._e=e; gEdges.appendChild(l); return l;
   });
   var nodeEls=NODES.map(function(n){
-    var g=mk("g",{class:"node",tabindex:"0","data-id":n.id,role:"button","aria-label":n.id+": "+n.b.slice(0,80)});
+    var g=mk("g",{class:"node",tabindex:"0","data-id":n.id,role:"button","aria-label":n.id+": "+title(n)});
     if(n.s>=2 && n.k!=="product"){ g.appendChild(mk("circle",{class:"ring", r:n.r+4, "stroke-width": n.s>=3?2.4:1.8})); }
     var c;
     if(n.k==="product"){ c=mk("rect",{class:"body", x:-n.r, y:-n.r, width:n.r*2, height:n.r*2, rx:3, fill:tcolor(n.g)}); }
     else if(n.k==="opp"){ var rr=n.r*1.25; c=mk("path",{class:"body", d:"M0 "+(-rr)+" L"+rr+" 0 L0 "+rr+" L"+(-rr)+" 0 Z", fill:tcolor(n.g)}); }
     else { c=mk("circle",{class:"body", r:n.r, fill:tcolor(n.g)}); }
     g.appendChild(c);
-    var short=n.id.replace(/-/,"‑");
-    var t=mk("text",{y:n.r+11}); t.textContent=n.id; g.appendChild(t);
+    if(isNew(n)){ g.appendChild(mk("circle",{class:"newdot", cx:n.r*0.78, cy:-n.r*0.78, r:3.4})); }
+    var t=mk("text",{y:n.r+12}); t.textContent=n.id; g.appendChild(t);
     g._n=n; gNodes.appendChild(g); return g;
   });
-
   function refreshColors(){
     css=getComputedStyle(document.documentElement);
     nodeEls.forEach(function(g){ g.querySelector(".body").setAttribute("fill", tcolor(g._n.g)); });
@@ -580,26 +614,22 @@
   var alpha=1, running=false, raf=null;
   function tick(){
     var i,j,n,m,dx,dy,d2,d,f;
-    // repulsion
-    for(i=0;i<NODES.length;i++){ n=NODES[i];
-      for(j=i+1;j<NODES.length;j++){ m=NODES[j];
+    for(i=0;i<NODES.length;i++){ n=NODES[i]; if(n._show===false) continue;
+      for(j=i+1;j<NODES.length;j++){ m=NODES[j]; if(m._show===false) continue;
         dx=n.x-m.x; dy=n.y-m.y; d2=dx*dx+dy*dy+0.01; d=Math.sqrt(d2);
         f=2600/d2; if(f>4)f=4; var ux=dx/d, uy=dy/d;
         n.vx+=ux*f; n.vy+=uy*f; m.vx-=ux*f; m.vy-=uy*f;
       }
     }
-    // springs
-    for(i=0;i<EDGES.length;i++){ var e=EDGES[i]; n=byId[e[0]]; m=byId[e[1]];
+    for(i=0;i<EDGES.length;i++){ var e=EDGES[i]; n=byId[e[0]]; m=byId[e[1]]; if(n._show===false||m._show===false) continue;
       dx=m.x-n.x; dy=m.y-n.y; d=Math.sqrt(dx*dx+dy*dy)+0.01;
       var L=e[2]==="reinforce"?78:(e[2]==="evidence"?66:96); f=(d-L)*0.028; var vx=dx/d*f, vy=dy/d*f;
       n.vx+=vx; n.vy+=vy; m.vx-=vx; m.vy-=vy;
     }
-    // group + center gravity
     for(i=0;i<NODES.length;i++){ n=NODES[i]; var a=anchors[n.g];
       n.vx+=(a.x-n.x)*0.020 + (CX-n.x)*0.004;
       n.vy+=(a.y-n.y)*0.020 + (CY-n.y)*0.004;
     }
-    // integrate
     for(i=0;i<NODES.length;i++){ n=NODES[i];
       if(n.fixed) continue;
       n.vx*=0.86; n.vy*=0.86;
@@ -619,22 +649,29 @@
   }
   function loop(){ tick(); draw(); if(alpha>0.02||dragNode){ raf=requestAnimationFrame(loop); } else { running=false; } }
   function reheat(a){ alpha=Math.max(alpha,a||0.7); if(reduce){ for(var k=0;k<220;k++) tick(); draw(); return; } if(!running){ running=true; raf=requestAnimationFrame(loop); } }
-  // initial settle
-  if(reduce){ for(var k=0;k<400;k++) tick(); draw(); } else { reheat(1); }
+  if(reduce){ for(var k0=0;k0<400;k0++) tick(); draw(); setTimeout(fitView,0); } else { reheat(1); setTimeout(fitView,1600); }
 
   // ----------------------------------------------------------- pan / zoom
   var tx=0, ty=0, kZoom=1;
   function applyView(){ gViewport.setAttribute("transform","translate("+tx+","+ty+") scale("+kZoom+")"); }
   function scaleFactor(){ return svg.getBoundingClientRect().width / VBW; }
   function toGraph(clientX,clientY){ var r=svg.getBoundingClientRect(), s=r.width/VBW; var vx=(clientX-r.left)/s, vy=(clientY-r.top)/s; return {x:(vx-tx)/kZoom, y:(vy-ty)/kZoom}; }
-
+  function zoomAt(vx,vy,factor){ var k2=Math.max(0.35,Math.min(3.2,kZoom*factor)); tx=vx-k2*(vx-tx)/kZoom; ty=vy-k2*(vy-ty)/kZoom; kZoom=k2; applyView(); }
+  function fitView(){
+    var xs=[],ys=[]; NODES.forEach(function(n){ if(n._show!==false){ xs.push(n.x); ys.push(n.y); } });
+    if(!xs.length){ tx=0; ty=0; kZoom=1; applyView(); return; }
+    var minX=Math.min.apply(null,xs)-50, maxX=Math.max.apply(null,xs)+50, minY=Math.min.apply(null,ys)-50, maxY=Math.max.apply(null,ys)+50;
+    var k=Math.min(VBW/(maxX-minX), VBH/(maxY-minY), 2.2); kZoom=k;
+    tx=(VBW-(minX+maxX)*k)/2; ty=(VBH-(minY+maxY)*k)/2; applyView();
+  }
   svg.addEventListener("wheel",function(ev){
     ev.preventDefault();
     var r=svg.getBoundingClientRect(), s=r.width/VBW;
-    var vx=(ev.clientX-r.left)/s, vy=(ev.clientY-r.top)/s;
-    var k2=kZoom*(ev.deltaY<0?1.12:0.893); k2=Math.max(0.35,Math.min(3.2,k2));
-    tx=vx-k2*(vx-tx)/kZoom; ty=vy-k2*(vy-ty)/kZoom; kZoom=k2; applyView();
+    zoomAt((ev.clientX-r.left)/s, (ev.clientY-r.top)/s, ev.deltaY<0?1.12:0.893);
   },{passive:false});
+  document.getElementById("zoomIn").addEventListener("click",function(){ zoomAt(CX,CY,1.25); });
+  document.getElementById("zoomOut").addEventListener("click",function(){ zoomAt(CX,CY,0.8); });
+  document.getElementById("zoomFit").addEventListener("click",function(){ fitView(); });
 
   var dragNode=null, panning=false, last=null, moved=false;
   svg.addEventListener("pointerdown",function(ev){
@@ -656,7 +693,7 @@
   svg.addEventListener("pointerup",endPointer);
   svg.addEventListener("pointercancel",endPointer);
 
-  // ----------------------------------------------------------- focus / highlight
+  // ----------------------------------------------------------- focus / highlight / tooltip
   var selected=null, hovered=null;
   function computeFocus(){
     var id=hovered||selected;
@@ -670,10 +707,11 @@
   var tip=document.getElementById("tip");
   var tipNode=null;
   function showTip(n){
-    tip.innerHTML='<div class="tt-h"><span class="tt-id" style="background:'+tcolor(n.g)+'">'+esc(n.id)+'</span>'+
-      '<span class="tt-th">'+esc(GROUPS[n.g].label)+'</span></div>'+
-      '<div class="tt-b">'+esc(n.b)+'</div>'+
-      '<div class="tt-p">'+n.p.map(esc).join(" · ")+(n.s>=2?'  ·  ◆ '+n.s+(n.k==="idea"?'-speaker':' sources'):'')+(n.st?'  ·  '+esc(n.st):'')+(n.rc?'  ·  reality: '+esc(n.rc):'')+(n.asof?'  ·  as of '+esc(n.asof):'')+'</div>';
+    var meta=[]; if(n.p&&n.p.length) meta.push(n.p.join(" · "));
+    if(n.s>=2) meta.push("◆ "+n.s+(n.k==="idea"?" speakers":" sources"));
+    if(n.st) meta.push(n.st); if(n.rc) meta.push("reality: "+n.rc);
+    tip.innerHTML='<div class="tt-h"><span class="tt-id" style="background:'+tcolor(n.g)+'">'+esc(n.id)+'</span><span class="tt-th">'+esc(kindLabel(n))+' · '+esc(GROUPS[n.g].label)+'</span></div>'+
+      '<div class="tt-t">'+esc(title(n))+'</div><div class="tt-b">'+esc(n.b)+'</div><div class="tt-p">'+esc(meta.join("   ·   "))+'</div>';
     tip.classList.add("show");
   }
   function hideTip(){ tip.classList.remove("show"); tipNode=null; }
@@ -682,12 +720,9 @@
     var x=ev.clientX-r.left+16, y=ev.clientY-r.top+16;
     var tw=tip.offsetWidth, th=tip.offsetHeight;
     if(x+tw>r.width-8) x=ev.clientX-r.left-tw-16;
-    if(x<8) x=8;
-    if(y+th>r.height-8) y=r.height-th-8;
-    if(y<8) y=8;
+    if(x<8) x=8; if(y+th>r.height-8) y=r.height-th-8; if(y<8) y=8;
     tip.style.left=x+"px"; tip.style.top=y+"px";
   }
-
   nodeEls.forEach(function(g){
     g.addEventListener("pointerenter",function(ev){ if(dragNode||panning)return; hovered=g._n.id; tipNode=g._n; showTip(g._n); moveTip(ev); computeFocus(); });
     g.addEventListener("pointerleave",function(){ hovered=null; hideTip(); computeFocus(); });
@@ -698,30 +733,35 @@
   });
   svg.addEventListener("click",function(ev){ if(!ev.target.closest(".node")&&!moved) deselect(); });
 
-  // ----------------------------------------------------------- detail panel
+  // ----------------------------------------------------------- panel: overview + detail
   var panel=document.getElementById("panel");
-  function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-  function select(id){
-    var n=byId[id]; if(!n) return; selected=id;
-    nodeEls.forEach(function(g){ g.classList.toggle("selected", g._n.id===id); });
-    computeFocus();
+  function pills(n){
+    var out=[];
+    if(n.k==="product"){ out.push('<span class="pill">product</span>'); }
+    else if(n.k==="idea"){ out.push(n.s>=2 ? '<span class="pill consensus">◆ '+n.s+'-speaker consensus</span>' : '<span class="pill">1 speaker</span>'); }
+    else { out.push(n.s>=2 ? '<span class="pill consensus">◆ '+n.s+' independent sources</span>' : '<span class="pill">1 source</span>'); }
+    if(n.st) out.push('<span class="pill st st-'+esc(n.st)+'">'+esc(n.st)+'</span>');
+    if(n.rc) out.push('<span class="pill rc rc-'+esc(n.rc)+'" title="Reality check: a background check from reviews, analyst notes, forum threads and usage numbers, separate from vendor claims">reality: '+esc(n.rc)+'</span>');
+    if(isNew(n)) out.push('<span class="pill new">new</span>');
+    n.p.forEach(function(w){ out.push('<span class="pill"><span class="who">'+esc(w)+'</span></span>'); });
+    return out.join("");
+  }
+  function sourceHtml(k){
+    var t=SRC[k]; if(!t) return '';
+    var dt=t.d?'<span class="dt">'+esc(t.d)+'</span>':'';
+    if(t.yt){ return '<div class="s"><span class="who">'+esc(t.who)+'</span> <span class="tt">— '+esc(t.t)+'</span><div class="lk">'+dt+'<a href="'+esc(t.yt)+'" target="_blank" rel="noopener">▶ video</a><a href="'+esc(t.w)+'" target="_blank" rel="noopener">✎ transcript</a></div></div>'; }
+    return '<div class="s"><span class="who">'+esc(t.who)+'</span> <span class="tt">— '+esc(t.t)+'</span><div class="lk">'+dt+'<span class="dt">'+esc(t.type||"source")+'</span>'+(t.url?'<a href="'+esc(t.url)+'" target="_blank" rel="noopener">↗ open</a>':'')+'</div></div>';
+  }
+  var REL_ORDER=["reinforce","evidence","relate","tension"], REL_LABEL={reinforce:"Reinforces / builds on",evidence:"Evidence",relate:"Related",tension:"Tension"};
+  function renderDetail(n){
     var col=tcolor(n.g);
-    var connEdges=EDGES.filter(function(e){return e[0]===id||e[1]===id;});
-    var conns=connEdges.map(function(e){
-      var other=e[0]===id?e[1]:e[0], dir=e[0]===id?"→":"←", on=byId[other];
-      return '<button class="conn" data-go="'+other+'"><span class="rel '+e[2]+'">'+esc(e[3])+'</span><span class="cid">'+dir+' '+other+'</span><span class="ct">'+esc(on.b.split(/[.—]/)[0]).slice(0,52)+'</span></button>';
-    }).join("");
-    var people=n.p.map(function(w){return '<span class="pill"><span class="who">'+esc(w)+'</span></span>';}).join("");
-    var consensus;
-    if(n.k==="product"){ consensus='<span class="pill">product</span>'; }
-    else if(n.k==="idea"){ consensus= n.s>=2 ? '<span class="pill consensus">◆ '+n.s+'-speaker consensus</span>' : '<span class="pill">1 speaker</span>'; }
-    else { consensus= n.s>=2 ? '<span class="pill consensus">◆ '+n.s+' independent sources</span>' : '<span class="pill">1 source</span>'; }
-    var status= n.st ? '<span class="pill st st-'+esc(n.st)+'">'+esc(n.st)+'</span>' : '';
-    if(n.rc) status += '<span class="pill rc rc-'+esc(n.rc)+'" title="Reality check: background check from reviews, analyst notes, forum threads and usage numbers">reality: '+esc(n.rc)+'</span>';
-    var srcs=n.src.map(function(k){var t=SRC[k]; if(!t) return '';
-      var dt=t.d?'<span class="dt">'+esc(t.d)+'</span>':'';
-      if(t.yt){ return '<div class="s"><span class="who">'+esc(t.who)+'</span> — <span style="color:var(--muted)">'+esc(t.t)+'</span><br>'+dt+'<a href="'+t.yt+'" target="_blank" rel="noopener">▶ video</a><a href="'+t.w+'" target="_blank" rel="noopener">✎ transcript</a></div>'; }
-      return '<div class="s"><span class="who">'+esc(t.who)+'</span> — <span style="color:var(--muted)">'+esc(t.t)+'</span><br>'+dt+'<span class="dt">'+esc(t.type||"source")+'</span>'+(t.url?'<a href="'+t.url+'" target="_blank" rel="noopener">↗ open</a>':'')+'</div>';
+    var connEdges=EDGES.filter(function(e){return e[0]===n.id||e[1]===n.id;});
+    var groups={}; connEdges.forEach(function(e){ (groups[e[2]]=groups[e[2]]||[]).push(e); });
+    var conns=REL_ORDER.filter(function(k){return groups[k];}).map(function(k){
+      return '<p class="psub">'+REL_LABEL[k]+' · '+groups[k].length+'</p><div class="conns">'+groups[k].map(function(e){
+        var other=e[0]===n.id?e[1]:e[0], dir=e[0]===n.id?"→":"←", on=byId[other];
+        return '<button class="conn" data-go="'+esc(other)+'"><span class="rel '+e[2]+'">'+esc(e[3])+'</span><span class="ct">'+esc(title(on))+'</span><span class="cid">'+dir+' '+esc(other)+' · '+esc(kindLabel(on))+'</span></button>';
+      }).join("")+'</div>';
     }).join("");
     var said=[]; n.src.forEach(function(k){ var t=SRC[k]; if(t&&t.d&&said.indexOf(t.d)<0) said.push(t.d); });
     var dates=[];
@@ -729,41 +769,62 @@
     if(n.ad) dates.push('<span><b>added</b>'+esc(n.ad)+'</span>');
     if(n.up) dates.push('<span><b>updated</b>'+esc(n.up)+'</span>');
     if(n.asof) dates.push('<span><b>as of</b>'+esc(n.asof)+'</span>');
-    var kind = n.k==="pattern"?"Pattern · ":n.k==="product"?"Product · ":n.k==="opp"?"Opportunity · ":"";
-    panel.innerHTML=
-      '<div class="ph"><span class="idtag" style="background:'+col+'">'+esc(n.id)+'</span>'+
-      '<button class="closex" aria-label="Close" data-close>×</button></div>'+
-      '<div class="pbody">'+
-        '<div class="themeline" style="color:'+col+'">'+esc(kind+GROUPS[n.g].label)+'</div>'+
-        '<div class="meta">'+consensus+status+people+'</div>'+
-        '<p class="blurb">'+esc(n.b)+'</p>'+
-        (dates.length?'<p class="dates">'+dates.join("")+'</p>':'')+
-        '<p class="psub">Connections · '+connEdges.length+'</p><div class="conns">'+(conns||'<span class="note">No links yet.</span>')+'</div>'+
-        '<p class="psub">Sources</p><div class="srclinks">'+srcs+'</div>'+
-      '</div>';
-    panel.classList.add("open");
+    panel.innerHTML='<div class="pwrap">'+
+      '<div class="ph"><span class="idtag" style="background:'+col+'">'+esc(n.id)+'</span><span class="kind">'+esc(kindLabel(n))+'</span><button class="closex" aria-label="Back to overview" data-close>×</button></div>'+
+      '<h2>'+esc(title(n))+'</h2>'+
+      '<div class="themeline" style="color:'+col+'">'+esc(GROUPS[n.g].label)+'</div>'+
+      '<div class="meta">'+pills(n)+'</div>'+
+      '<p class="blurb">'+esc(n.b)+'</p>'+
+      (dates.length?'<p class="dates">'+dates.join("")+'</p>':'')+
+      (conns||'<p class="psub">Connections</p><p class="note">No links yet.</p>')+
+      '<p class="psub">Sources</p><div class="srclinks">'+n.src.map(sourceHtml).join("")+'</div>'+
+    '</div>';
     panel.querySelector("[data-close]").addEventListener("click",deselect);
-    Array.prototype.forEach.call(panel.querySelectorAll("[data-go]"),function(b){ b.addEventListener("click",function(){ select(b.getAttribute("data-go")); }); });
+    bindGo(panel);
   }
-  function deselect(){ selected=null; panel.classList.remove("open"); nodeEls.forEach(function(g){g.classList.remove("selected");}); computeFocus(); }
-  document.addEventListener("keydown",function(ev){ if(ev.key==="Escape") deselect(); });
+  function ovRow(n, right, rightCls){
+    return '<button class="ovrow" data-go="'+esc(n.id)+'"><span class="sh '+shapeClass(n)+'" style="background:'+tcolor(n.g)+'"></span><span class="t">'+esc(title(n))+'<small>'+esc(n.id)+' · '+esc(kindLabel(n))+'</small></span><span class="r '+(rightCls||"")+'">'+right+'</span></button>';
+  }
+  function renderOverview(){
+    var top=NODES.filter(function(n){return n.s>=2;}).sort(function(a,b){return b.s-a.s||a.id.localeCompare(b.id);}).slice(0,8);
+    var recent=NODES.filter(function(n){return n.ad;}).sort(function(a,b){return b.ad.localeCompare(a.ad)||a.id.localeCompare(b.id);}).slice(0,8);
+    var prods=NODES.filter(function(n){return n.k==="product";});
+    panel.innerHTML='<div class="pwrap ov">'+
+      '<h3>Start here</h3><p class="lead">Click any node, row or item for the full entry. The right rail stays with you as you explore.</p>'+
+      '<p class="psub">Strongest consensus</p><div class="ovlist">'+top.map(function(n){return ovRow(n,"◆ "+n.s);}).join("")+'</div>'+
+      '<p class="psub">Added most recently</p><div class="ovlist">'+recent.map(function(n){return ovRow(n,n.ad,"dt");}).join("")+'</div>'+
+      (prods.length?'<p class="psub">Reality checks</p><div class="ovlist">'+prods.map(function(n){return ovRow(n,'<span class="pill rc rc-'+esc(n.rc)+'">'+esc(n.rc)+'</span>');}).join("")+'</div>':'')+
+    '</div>';
+    bindGo(panel);
+  }
+  function bindGo(root){ Array.prototype.forEach.call(root.querySelectorAll("[data-go]"),function(b){ b.addEventListener("click",function(){ select(b.getAttribute("data-go")); }); }); }
+  function select(id){
+    var n=byId[id]; if(!n) return; selected=id;
+    nodeEls.forEach(function(g){ g.classList.toggle("selected", g._n.id===id); });
+    Array.prototype.forEach.call(document.querySelectorAll(".lrow"),function(r){ r.classList.toggle("selected", r.getAttribute("data-go")===id); });
+    computeFocus(); renderDetail(n); panel.classList.add("open"); panel.scrollTop=0;
+  }
+  function deselect(){ selected=null; panel.classList.remove("open"); nodeEls.forEach(function(g){g.classList.remove("selected");}); Array.prototype.forEach.call(document.querySelectorAll(".lrow.selected"),function(r){r.classList.remove("selected");}); computeFocus(); renderOverview(); }
+  document.addEventListener("keydown",function(ev){
+    if(ev.key==="Escape"){ deselect(); return; }
+    if(ev.key==="/" && !/input|select|textarea/i.test(ev.target.tagName)){ ev.preventDefault(); sIn.focus(); sIn.select(); }
+  });
 
   // ----------------------------------------------------------- filters
   var themeOn={}; GORDER.forEach(function(g){themeOn[g]=true;});
   var layerOn={idea:true, world:true};
-  function layerOf(n){ return n.k==="idea" ? "idea" : "world"; }
   var minS=1, query="";
-  function applyFilters(){
-    NODES.forEach(function(n,i){
-      var q=query? (n.id+" "+n.b+" "+n.p.join(" ")+" "+GROUPS[n.g].label+" "+n.k+" "+(n.st||"")+" "+(n.rc||"")+" "+(n.asof||"")).toLowerCase().indexOf(query)>=0 : true;
-      var show = layerOn[layerOf(n)] && themeOn[n.g] && n.s>=minS && q;
-      n._show=show; nodeEls[i].classList.toggle("hidden",!show);
-    });
-    edgeEls.forEach(function(l){ var e=l._e; l.classList.toggle("hidden", !(byId[e[0]]._show&&byId[e[1]]._show)); });
-    reheat(0.45);
+  function matches(n){
+    var q=query? (n.id+" "+title(n)+" "+n.b+" "+n.p.join(" ")+" "+GROUPS[n.g].label+" "+n.k+" "+(n.st||"")+" "+(n.rc||"")+" "+(n.asof||"")).toLowerCase().indexOf(query)>=0 : true;
+    return layerOn[layerOf(n)] && themeOn[n.g] && n.s>=minS && q;
   }
-
-  // consensus segmented
+  function applyFilters(){
+    var shown=0;
+    NODES.forEach(function(n,i){ var show=matches(n); n._show=show; if(show) shown++; nodeEls[i].classList.toggle("hidden",!show); });
+    edgeEls.forEach(function(l){ var e=l._e; l.classList.toggle("hidden", !(byId[e[0]]._show&&byId[e[1]]._show)); });
+    document.getElementById("empty").classList.toggle("show", shown===0);
+    renderList(); reheat(0.45);
+  }
   var seg=document.getElementById("consensusSeg");
   Array.prototype.forEach.call(seg.children,function(b){
     b.addEventListener("click",function(){
@@ -771,21 +832,17 @@
       minS=parseInt(b.getAttribute("data-min"),10); applyFilters();
     });
   });
-
-  // layers
   var lseg=document.getElementById("layerSeg");
   var layerCounts={idea:0,world:0}; NODES.forEach(function(n){ layerCounts[layerOf(n)]++; });
   Array.prototype.forEach.call(lseg.children,function(b){
-    var L=b.getAttribute("data-layer"); b.querySelector(".cnt").textContent=layerCounts[L];
+    var L=b.getAttribute("data-layer"); b.querySelector(".n").textContent=layerCounts[L];
     b.addEventListener("click",function(){ layerOn[L]=!layerOn[L]; b.setAttribute("aria-pressed", layerOn[L]?"true":"false"); applyFilters(); });
   });
-
-  // theme chips
   var counts={}; GORDER.forEach(function(g){counts[g]=0;}); NODES.forEach(function(n){counts[n.g]++;});
   var chipWrap=document.getElementById("themeChips");
   GORDER.forEach(function(g){
     var b=document.createElement("button"); b.className="chip"; b.setAttribute("aria-pressed","true"); b.setAttribute("data-g",g);
-    b.innerHTML='<span class="sw" style="background:'+tcolor(g)+'"></span>'+GROUPS[g].label+'<span class="cnt">'+counts[g]+'</span>';
+    b.innerHTML='<span class="sw" style="background:'+tcolor(g)+'"></span>'+esc(GROUPS[g].label)+'<span class="cnt">'+counts[g]+'</span>';
     b.addEventListener("click",function(){ themeOn[g]=!themeOn[g]; b.setAttribute("aria-pressed", themeOn[g]?"true":"false"); applyFilters(); });
     chipWrap.appendChild(b);
   });
@@ -794,41 +851,69 @@
     Array.prototype.forEach.call(chipWrap.children,function(b){b.setAttribute("aria-pressed","true");});
     applyFilters();
   });
-
-  // search
   var sIn=document.getElementById("search"); var sT=null;
   sIn.addEventListener("input",function(){ clearTimeout(sT); sT=setTimeout(function(){ query=sIn.value.trim().toLowerCase(); applyFilters(); },110); });
+
+  // ----------------------------------------------------------- list view
+  var lbody=document.getElementById("lbody"), lcount=document.getElementById("lcount"), lsort=document.getElementById("lsort");
+  function lrow(n){
+    var right='<span class="score'+(n.s>=2?'':' one')+'">'+(n.s>=2?'◆ '+n.s:'·')+'</span>'+(n.ad?'<span class="dt">'+esc(n.ad)+'</span>':'');
+    var m=[]; if(n.st) m.push('<span class="pill st st-'+esc(n.st)+'">'+esc(n.st)+'</span>'); if(n.rc) m.push('<span class="pill rc rc-'+esc(n.rc)+'">reality: '+esc(n.rc)+'</span>'); if(isNew(n)) m.push('<span class="pill new">new</span>');
+    m.push('<span class="pill">'+esc(n.p.join(" · "))+'</span>');
+    return '<button class="lrow'+(selected===n.id?' selected':'')+'" data-go="'+esc(n.id)+'"><span class="sh '+shapeClass(n)+(n.s>=2&&n.k!=="product"?' ring':'')+'" style="background:'+tcolor(n.g)+'"></span><span><span class="t"><span class="id">'+esc(n.id)+'</span>'+esc(title(n))+'</span><span class="b">'+esc(n.b)+'</span><span class="m">'+m.join("")+'</span></span><span class="right">'+right+'</span></button>';
+  }
+  function renderList(){
+    var vis=NODES.filter(function(n){return n._show!==false;});
+    lcount.textContent="Showing "+vis.length+" of "+NODES.length;
+    var mode=lsort.value, html="";
+    if(!vis.length){ lbody.innerHTML='<p class="lempty">Nothing matches the current filters.</p>'; return; }
+    if(mode==="theme"){
+      GORDER.forEach(function(g){
+        var rows=vis.filter(function(n){return n.g===g;}).sort(function(a,b){return b.s-a.s||a.id.localeCompare(b.id);});
+        if(!rows.length) return;
+        html+='<div class="lgroup"><h3><span class="sw" style="background:'+tcolor(g)+'"></span>'+esc(GROUPS[g].label)+' <span class="n">'+rows.length+'</span></h3><div class="lrows">'+rows.map(lrow).join("")+'</div></div>';
+      });
+    } else {
+      var rows=vis.slice().sort(mode==="score" ? function(a,b){return b.s-a.s||a.id.localeCompare(b.id);} : function(a,b){return (b.ad||"").localeCompare(a.ad||"")||a.id.localeCompare(b.id);});
+      html='<div class="lgroup"><div class="lrows">'+rows.map(lrow).join("")+'</div></div>';
+    }
+    lbody.innerHTML=html; bindGo(lbody);
+  }
+  lsort.addEventListener("change",renderList);
+  var vG=document.getElementById("viewGraph"), vL=document.getElementById("viewList");
+  function setView(v){ document.body.classList.toggle("view-list", v==="list"); vG.setAttribute("aria-pressed", v==="graph"?"true":"false"); vL.setAttribute("aria-pressed", v==="list"?"true":"false"); try{localStorage.setItem("ideaGraphView",v);}catch(e){} if(v==="graph") reheat(0.3); }
+  vG.addEventListener("click",function(){ setView("graph"); });
+  vL.addEventListener("click",function(){ setView("list"); });
 
   // ----------------------------------------------------------- sources + stats
   var srcBox=document.getElementById("sources");
   Object.keys(TALKS).forEach(function(k){ var t=TALKS[k];
     var d=document.createElement("div"); d.className="src";
-    d.innerHTML='<span class="tag">'+k+'</span> <span class="who">'+t.who+'</span>'+(t.d?' <span class="dt">'+t.d+'</span>':'')+'<br><span class="tt">'+t.t+'</span><div class="lk"><a href="'+t.yt+'" target="_blank" rel="noopener">video ▶</a><a href="'+t.w+'" target="_blank" rel="noopener">transcript ✎</a></div>';
+    d.innerHTML='<span class="tag">'+k+'</span><span class="who">'+esc(t.who)+'</span>'+(t.d?'<span class="dt">'+esc(t.d)+'</span>':'')+'<span class="tt">'+esc(t.t)+'</span><div class="lk"><a href="'+esc(t.yt)+'" target="_blank" rel="noopener">video ▶</a><a href="'+esc(t.w)+'" target="_blank" rel="noopener">transcript ✎</a></div>';
     srcBox.appendChild(d);
   });
   Object.keys(WSRC).forEach(function(k){ var t=WSRC[k];
     var d=document.createElement("div"); d.className="src";
-    d.innerHTML='<span class="tag">'+k+'</span> <span class="who">'+esc(t.who)+'</span>'+(t.d?' <span class="dt">'+esc(t.d)+'</span>':'')+'<br><span class="tt">'+esc(t.t)+'</span><div class="lk"><span class="dt">'+esc(t.type||"source")+'</span>'+(t.url?'<a href="'+t.url+'" target="_blank" rel="noopener">open ↗</a>':'')+'</div>';
+    d.innerHTML='<span class="tag">'+k+'</span><span class="who">'+esc(t.who)+'</span>'+(t.d?'<span class="dt">'+esc(t.d)+'</span>':'')+'<span class="tt">'+esc(t.t)+'</span><div class="lk"><span class="dt" style="margin:0">'+esc(t.type||"source")+'</span>'+(t.url?'<a href="'+esc(t.url)+'" target="_blank" rel="noopener">open ↗</a>':'')+'</div>';
     srcBox.appendChild(d);
   });
   function countK(k){ return NODES.filter(function(n){return n.k===k;}).length; }
-  var consensusCount=NODES.filter(function(n){return n.k==="idea"&&n.s>=2;}).length;
+  var consensusCount=NODES.filter(function(n){return n.s>=2;}).length;
   document.getElementById("stats").innerHTML=
-    '<span class="stat"><b>'+countK("idea")+'</b> ideas</span>'+
-    '<span class="stat"><b>'+Object.keys(TALKS).length+'</b> talks</span>'+
-    '<span class="stat"><b>'+consensusCount+'</b> multi-speaker</span>'+
-    (WORLD.length?'<span class="stat"><b>'+countK("pattern")+'</b> patterns</span><span class="stat"><b>'+countK("product")+'</b> products</span>'+(countK("opp")?'<span class="stat"><b>'+countK("opp")+'</b> opportunities</span>':''):'')+
-    '<span class="stat"><b>'+EDGES.length+'</b> links</span>';
+    '<div class="stat"><b>'+countK("idea")+'</b><span>ideas</span></div>'+
+    '<div class="stat"><b>'+consensusCount+'</b><span>consensus</span></div>'+
+    '<div class="stat"><b>'+countK("pattern")+'</b><span>patterns</span></div>'+
+    '<div class="stat"><b>'+countK("product")+'</b><span>products</span></div>';
 
-  // ----------------------------------------------------------- theme toggle
+  // ----------------------------------------------------------- theme
   var themeBtn=document.getElementById("themeBtn");
   function currentTheme(){ var e=document.documentElement.getAttribute("data-theme"); if(e) return e; return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"; }
-  function setTheme(t){ document.documentElement.setAttribute("data-theme",t); try{localStorage.setItem("ideaGraphTheme",t);}catch(e){} document.getElementById("themeIcon").textContent = t==="dark"?"☾":"☀"; refreshColors(); rebuildChipSwatches(); }
-  function rebuildChipSwatches(){ Array.prototype.forEach.call(chipWrap.children,function(b){ b.querySelector(".sw").style.background=tcolor(b.getAttribute("data-g")); }); if(selected) select(selected); }
+  function setTheme(t){ document.documentElement.setAttribute("data-theme",t); try{localStorage.setItem("ideaGraphTheme",t);}catch(e){} document.getElementById("themeIcon").textContent = t==="dark"?"☾":"☀"; refreshColors(); Array.prototype.forEach.call(chipWrap.children,function(b){ b.querySelector(".sw").style.background=tcolor(b.getAttribute("data-g")); }); if(selected) select(selected); else renderOverview(); renderList(); }
   themeBtn.addEventListener("click",function(){ setTheme(currentTheme()==="dark"?"light":"dark"); });
-  try{ var saved=localStorage.getItem("ideaGraphTheme"); if(saved) setTheme(saved); else document.getElementById("themeIcon").textContent = currentTheme()==="dark"?"☾":"☀"; }catch(e){}
-
-  window.addEventListener("resize",function(){ /* viewBox handles scaling; nothing needed */ });
+  var savedTheme=null, savedView=null; try{ savedTheme=localStorage.getItem("ideaGraphTheme"); savedView=localStorage.getItem("ideaGraphView"); }catch(e){}
+  setTheme(savedTheme||currentTheme());
+  applyFilters(); renderOverview();
+  setView(savedView==="list"?"list":"graph");
 })();
 </script>
 </body>
