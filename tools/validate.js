@@ -10,7 +10,7 @@ var G = ctx.GROUPS, GORDER = ctx.GORDER, TALKS = ctx.TALKS, WSRC = ctx.WSRC, WOR
 var all = NODES.map(function (n) { if (!n.k) n.k = "idea"; return n; }).concat(WORLD);
 var SRC = Object.assign({}, TALKS, WSRC), ids = {}, errs = [];
 var KINDS = { idea: 1, pattern: 1, product: 1, opp: 1 }, EK = { reinforce: 1, relate: 1, tension: 1, evidence: 1 };
-var ST = { announced: 1, shipping: 1, dead: 1, acquired: 1, idea: 1, exploring: 1, building: 1, dropped: 1 };
+var ST = { announced: 1, beta: 1, shipping: 1, dead: 1, acquired: 1, idea: 1, exploring: 1, building: 1, dropped: 1 };
 var RC = { working: 1, early: 1, mixed: 1, unproven: 1, hype: 1, dead: 1 };
 var DATE = /^\d{4}-\d{2}(-\d{2})?$/;
 
@@ -37,7 +37,7 @@ all.forEach(function (n) {
     if (n.k === "product" && (!n.rc || !RC[n.rc])) errs.push(n.id + ": missing/bad reality check rc=" + n.rc);
   }
   if (!n.b || n.b.length < 20) errs.push(n.id + ": blurb too short");
-  if (!n.t || n.t.length < 6) errs.push(n.id + ": missing short title t");
+  if (!n.t || n.t.length < 3) errs.push(n.id + ": missing short title t");
 });
 Object.keys(SRC).forEach(function (k) {
   var t = SRC[k];

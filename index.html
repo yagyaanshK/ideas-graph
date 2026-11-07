@@ -123,17 +123,19 @@
   .node{cursor:pointer}
   .node .body{stroke:var(--bg); stroke-width:2; transition:opacity .18s}
   .node circle.ring{fill:none; stroke:var(--accent); opacity:.9}
-  .node text{font-family:var(--sans); font-size:10.5px; font-weight:500; fill:var(--muted); text-anchor:middle; pointer-events:none; paint-order:stroke; stroke:var(--bg); stroke-width:3.5px; stroke-linejoin:round; opacity:0; transition:opacity .18s}
-  .node.lbl text{opacity:1}
-  svg#graph.zoomed .node text{opacity:1}
+  .lt{font-family:var(--sans); font-size:10.5px; font-weight:500; fill:var(--muted); text-anchor:middle; pointer-events:none; paint-order:stroke; stroke:var(--bg); stroke-width:3.5px; stroke-linejoin:round; opacity:0; transition:opacity .18s}
+  .lt.lbl{opacity:1}
+  .lt.lbl.lblhide{opacity:0}
+  .lt.hidden{display:none}
+  svg#graph.zoomed .lt{opacity:1}
   .node:focus-visible{outline:none}
   .node:focus-visible .body{stroke:var(--link); stroke-width:3}
   svg#graph.has-focus .edge{opacity:.05}
   svg#graph.has-focus .node .body,svg#graph.has-focus .node circle.ring{opacity:.15}
-  svg#graph.has-focus .node text{opacity:0}
+  svg#graph.has-focus .lt{opacity:0}
   svg#graph .edge.hl{opacity:.95}
   svg#graph .node.hl .body,svg#graph .node.hl circle.ring{opacity:1}
-  svg#graph .node.hl text{opacity:1; fill:var(--ink)}
+  svg#graph .lt.hl, svg#graph .lt.hl.lblhide{opacity:1; fill:var(--ink)}
   .node.hidden,.edge.hidden{display:none}
   .node.selected .body{stroke:var(--accent); stroke-width:3}
   .stagectl{position:absolute; right:16px; bottom:16px; display:flex; flex-direction:column; gap:6px; z-index:3}
@@ -179,7 +181,7 @@
   .pill.consensus{border-color:var(--accent); color:var(--accent); font-weight:600; background:var(--accent-soft)}
   .pill.st{text-transform:capitalize}
   .pill.st-shipping{border-color:var(--t-own); color:var(--t-own)}
-  .pill.st-announced,.pill.st-building,.pill.st-exploring{border-color:var(--t-exec); color:var(--t-exec)}
+  .pill.st-announced,.pill.st-beta,.pill.st-building,.pill.st-exploring{border-color:var(--t-exec); color:var(--t-exec)}
   .pill.st-dead,.pill.st-dropped{border-color:var(--t-ops); color:var(--t-ops); text-decoration:line-through}
   .pill.st-acquired,.pill.st-idea{border-color:var(--accent); color:var(--accent)}
   .pill.rc-working{border-color:var(--t-own); color:var(--t-own)}
@@ -246,7 +248,7 @@
     .chips{grid-template-columns:1fr}
   }
   @media (max-width:420px){ .viewseg{display:none} }
-  @media (prefers-reduced-motion:reduce){ .drawer,.tooltip,.edge,.node .body,.node text{transition:none} }
+  @media (prefers-reduced-motion:reduce){ .drawer,.tooltip,.edge,.node .body,.lt{transition:none} }
 </style>
 </head>
 <body>
@@ -312,7 +314,7 @@
         <marker id="ar-tension" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--edge-tension)"/></marker>
         <marker id="ar-evidence" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--edge-evidence)"/></marker>
       </defs>
-      <g id="viewport"><g id="edges"></g><g id="nodes"></g></g>
+      <g id="viewport"><g id="edges"></g><g id="nodes"></g><g id="labels"></g></g>
     </svg>
     <div class="empty" id="empty">Nothing matches. Try clearing the search or filters.</div>
     <div class="stagectl">
@@ -387,16 +389,38 @@
     W8:{type:"article", who:"The Register, Q1 FY27 call (reality check)", t:"Headless 360: 4.5M MCP calls and ~1T API calls since April; Slack MCP 30-50M tool calls; Anthropic's Sales Cloud use up 5x via Claude Cowork; headless pricing still being worked out", url:"https://www.theregister.com/saas/2026/05/28/salesforce-waves-bye-bye-to-ui-in-headless-embrace/5247587", d:"2026-05-28"},
     W9:{type:"article", who:"VentureBeat (reality check)", t:"Salesforce put its CRM inside Claude: pilot-stage, no reliability data, pricing split across two vendors, lock-in and pricing power shifting to the model provider", url:"https://venturebeat.com/orchestration/salesforce-just-put-its-entire-crm-inside-claude-and-says-youll-never-need-its-app-again", d:"2026-08-26"},
     W10:{type:"article", who:"Analyst coverage: Bernstein, KeyBanc, Oppenheimer, G2 (reality check)", t:"Agentforce adoption scrutiny: customer data not organized enough for AI; ~23k of 150k customers using; many still piloting; setup complexity and credit pricing complaints", url:"https://www.cio.com/article/4198127/salesforces-agentforce-product-maturity-questioned-as-keybanc-cites-weak-customer-traction.html", d:"2026-07"},
-    W11:{type:"forum", who:"OpenAI developer community (reality check)", t:"Secure MCP Tunnel early issues: tunnel creation failures (since fixed), HTTP 424 in the Responses API; Business/Enterprise workspace needed", url:"https://community.openai.com/t/secure-mcp-tunnel-returns-424-in-responses-api/1384032", d:"2026-06"}
+    W11:{type:"forum", who:"OpenAI developer community (reality check)", t:"Secure MCP Tunnel early issues: tunnel creation failures (since fixed), HTTP 424 in the Responses API; Business/Enterprise workspace needed", url:"https://community.openai.com/t/secure-mcp-tunnel-returns-424-in-responses-api/1384032", d:"2026-06"},
+    W12:{type:"product page", who:"odysseusai.dev (unofficial guide) → Odysseus by PewDiePie / odysseus-dev", t:"Self-hosted, local-first AI workspace: chat, agents, deep research, email and calendar, notes, documents, memory, skills, MCP; runs local or cloud models. Guide is \"not affiliated\" with the maintainers", url:"https://odysseusai.dev/", d:"2026-05-31"},
+    W13:{type:"repo", who:"jia-seed / midi-voice", t:"Push-to-talk voice → Claude Sonnet 4.6 tool calls (start_loop, add_track, play_chord, set_cc) → Web MIDI → a hardware synth, layered into a live looper", url:"https://github.com/jia-seed/midi-voice", d:"2026-08-30"},
+    W14:{type:"repo", who:"Lexmount / Moli", t:"Rust headless browser built for AI agents (own kernel: V8, html5ever, Stylo); outputs Markdown / JSON / semantic tree; CDP + WebDriver + BiDi on one endpoint", url:"https://github.com/lexmount/moli", d:"2026-08-10"},
+    W15:{type:"product page", who:"OpenCode (Anomaly, ex-SST)", t:"\"The open source coding agent for any model\": terminal, desktop, mobile, SDK; 200+ providers incl. local; MCP, plugins, skills, permissions", url:"https://opencode.ai/", d:"2025-04-30"},
+    W16:{type:"tweet", who:"Future Brian (@ForwardEditor)", t:"\"IT'S RESET DAY!\" — a list of Codex `/goal` prompts for spending leftover usage with Sol high reasoning: clean up abandoned work across a workspace, audit and organise files, generate 100 product ideas…", url:"https://x.com/ForwardEditor/status/2086809289788682542", d:"2026-08-10"},
+    W17:{type:"product page", who:"Codag (YC)", t:"Local proxy for Claude Code and Codex that compresses large tool outputs before the agent reads them (\"cut the tool-output tax\"), keeps the rest retrievable, and reports tool / MCP spend", url:"https://codag.ai/", d:"2026-05-23"},
+    W18:{type:"launch post", who:"xAI", t:"Grok in OpenClaw: SuperGrok and X Premium subscribers sign in with OAuth and use their subscription as the model provider inside the open-source OpenClaw agent", url:"https://x.ai/news/grok-openclaw", d:"2026-05-19"},
+    W19:{type:"tweet (X Article)", who:"X Developers (@XDevelopers)", t:"\"X API + Hermes via xurl skill\": Hermes Agent ships with X's official `xurl` CLI as a bundled skill — post, search, bookmarks, lists by natural language; credentials stay outside the model session", url:"https://x.com/XDevelopers/status/2056871280599847054", d:"2026-05-19"},
+    W20:{type:"product page", who:"Nous Research — Hermes Agent", t:"Self-hosted personal agent: CLI + Telegram / Discord / Slack / WhatsApp / Signal / email; persistent memory; writes reusable skills from repeated tasks; scheduled jobs; subagents; sandboxes", url:"https://hermes-agent.nousresearch.com/", d:"2025-07-22"},
+    W21:{type:"product page", who:"Moonshot AI — Kimi Claw", t:"One-click hosted OpenClaw agent inside kimi.com, 24/7, long-term memory, preset skills; deploy to cloud, desktop or a spare Android phone", url:"https://www.kimi.com/bot", d:"2026-02-15"},
+    W22:{type:"repo", who:"Mesh-LLM (originated at Block)", t:"Pools GPUs across machines (private or public mesh) into one OpenAI-compatible endpoint; splits models too big for one box across peers", url:"https://github.com/Mesh-LLM/mesh-llm", d:"2026-02-11"},
+    W23:{type:"product page", who:"Exa Labs", t:"Search engine and API built for AI agents: Search, Contents, Agent, Monitors, Websets, MCP server, own crawl and embeddings index", url:"https://exa.ai/", d:"2026-05-20"},
+    W24:{type:"product page", who:"Google Labs — Pomelli", t:"Reads a business's website into a \"Business DNA\" (tone, colours, fonts, images) and generates campaigns, posts, ads and product shots; Pomelli Agent (May 2026) builds brand identity by chat, plus brand books and one-click sites", url:"https://labs.google.com/pomelli", d:"2025-10-28"},
+    W25:{type:"product page", who:"Enrich Labs — Helena", t:"\"Autonomous AI marketer\": SEO / social / email / paid ads, moves ad budget daily; also \"Agent Conversion Optimization\" — how shopping agents recommend brands; available as a Claude connector and ChatGPT plugin", url:"https://agent.enrichlabs.ai/marketing/register", d:"2026-11-08"},
+    W26:{type:"tweet", who:"Seijin Jung (@SeijinJung)", t:"\"Introducing Helena: the world's first autonomous AI marketer… her own memory, scheduled tasks, 100+ custom marketing tools… No dev. No CLI. No n8n. No API keys needed.\" (3.7M views)", url:"https://x.com/SeijinJung/status/2038617288367354018", d:"2026-03-30"},
+    W27:{type:"repo", who:"Microsoft — VibeVoice", t:"Open voice models: long-form multi-speaker TTS (90 min, 4 speakers), realtime streaming TTS (~300 ms), 60-min ASR with speaker labels; TTS code removed 2025-09-05 over misuse", url:"https://github.com/microsoft/VibeVoice", d:"2025-08-25"},
+    W28:{type:"repo", who:"Alibaba — PageAgent", t:"\"The GUI agent living in your webpage\": a JS library that embeds a natural-language agent in a web app, reading the DOM as text (no screenshots, no extension); BYO model; optional MCP server", url:"https://alibaba.github.io/page-agent/", d:"2025-09-23"},
+    W29:{type:"product page", who:"Zatanna (YC W26)", t:"\"Any portal becomes a fast, stable API your agents call in production\": record a human workflow once, compile the network requests into a hosted endpoint with auth / MFA, retries and self-repair; OAuth MCP server", url:"https://www.zatanna.ai/", d:"2026-03-01"},
+    W30:{type:"tweet", who:"Niels Rogge (@NielsRogge, Hugging Face)", t:"\"Quick video showing how to run GLM-OCR 100% locally!\" — llama.cpp, GGUF, LM Studio, OpenAI-compatible API; tables, images and more", url:"https://x.com/NielsRogge/status/2033270552694042976", d:"2026-03-15"},
+    W31:{type:"repo", who:"Physical Superintelligence PBC — Get Physics Done", t:"Slash commands, 24 role agents and MCP servers that install into Claude Code / Codex / Gemini CLI / Copilot CLI / OpenCode and run physics research: scope → plan → derive / compute → verify → paper → referee; \"a scalpel, not…", url:"https://github.com/psi-oss/get-physics-done", d:"2026-03-09"},
+    W32:{type:"tweet (X Article)", who:"Alex Wissner-Gross (@alexwg, PSI co-founder)", t:"\"The First Open-Source Agentic AI Physicist\" — GPD \"can scope a physics problem, plan the research, carry out derivations and numerical checks, and verify its own results\"; discloses a financial interest", url:"https://x.com/alexwg/status/2033227542392418458", d:"2026-03-15"},
+    W33:{type:"product page", who:"Glint (glint.trade terminal)", t:"Prediction-market and perps trading terminal: AI classifies news / social / flight-tracker signals by impact and matches them to Polymarket contracts; humans trade. Logged, not mapped — AI-assisted triage for human traders,…", url:"https://glint.trade/terminal", d:"2026-02-20"}
   };
 
   // World layer nodes — mirrors patterns-and-products.md
   // k: "pattern" | "product" | "opp" · st: status · asof: last verified · ad/up: added/updated · p: independent orgs/people · src: W# refs
   var WORLD = [
-    {id:"PAT-1", t:"The assistant is the front door", k:"pattern", g:"world", p:["Isha Foundation","Salesforce","OpenAI"], s:3, src:["W1","W3","W7"], ad:"2026-11-07", b:"The assistant is the front door: products ship inside ChatGPT / Claude instead of (or before) their own UI. A meditation app in the ChatGPT app store, a CRM as a Claude plugin, ~300 partner integrations. Reality check: supply is real, but distribution through the assistant is still weak (little traffic, poor discoverability)."},
-    {id:"PAT-2", t:"Systems of record go headless: \"our API is the UI\"", k:"pattern", g:"world", p:["Salesforce","OpenAI"], s:2, src:["W5","W6","W8","W2"], ad:"2026-11-07", b:"Systems of record go headless: the whole platform exposed as APIs + MCP tools + CLI so agents, not humans in a browser, do the work ('our API is the UI'). OpenAI builds the consuming side: ChatGPT, Codex and the API reach private MCP servers inside the company network. Usage is real but vendor-reported; pricing unfinished."},
-    {id:"PAT-3", t:"MCP is the connective tissue between agents and systems", k:"pattern", g:"world", p:["OpenAI","Salesforce","Anthropic"], s:3, src:["W2","W5","W3"], ad:"2026-11-07", b:"MCP is the connective tissue between agents and systems: OpenAI products consume it (incl. private servers), Salesforce exposes its platform through it, Anthropic's Claude plugs into Salesforce through it. Build every tool as an MCP server; assume every agent will speak it."},
-    {id:"PAT-4", t:"Governed agent access: tunnels, inherited permissions, audit", k:"pattern", g:"world", p:["OpenAI","Salesforce"], s:2, src:["W2","W3","W5"], ad:"2026-11-07", b:"Governed agent access: outbound-only tunnels, permissions inherited per user, audit trails, and testing / tracing / eval tools shipped alongside. Governance is part of the product, not an afterthought, and analysts say the vendor versions still need supplementing for 12-18 months."},
+    {id:"PAT-1", t:"The assistant is the front door", k:"pattern", g:"world", p:["Isha Foundation","Salesforce","OpenAI","Enrich Labs"], s:4, src:["W1","W3","W7","W25"], ad:"2026-11-07", up:"2026-11-08", b:"The assistant is the front door: products ship inside ChatGPT / Claude instead of (or before) their own UI. A meditation app in the ChatGPT app store, a CRM as a Claude plugin, ~300 partner integrations. Reality check: supply is real, but distribution through the assistant is still weak (little traffic, poor discoverability). Batch 2: Enrich Labs ships its marketing agent as a Claude connector and ChatGPT plugin from launch."},
+    {id:"PAT-2", t:"Systems of record go headless: \"our API is the UI\"", k:"pattern", g:"world", p:["Salesforce","OpenAI","X","Zatanna"], s:4, src:["W5","W6","W8","W2","W19","W29"], ad:"2026-11-07", up:"2026-11-08", b:"Systems of record go headless: the whole platform exposed as APIs + MCP tools + CLI so agents, not humans in a browser, do the work ('our API is the UI'). OpenAI builds the consuming side: ChatGPT, Codex and the API reach private MCP servers inside the company network. Usage is real but vendor-reported; pricing unfinished. Batch 2: X ships its own API as an official agent skill (xurl); Zatanna compiles API-less portals into agent endpoints."},
+    {id:"PAT-3", t:"MCP is the connective tissue between agents and systems", k:"pattern", g:"world", p:["OpenAI","Salesforce","Anthropic","Exa","Zatanna","PSI"], s:6, src:["W2","W5","W3","W23","W29","W31"], ad:"2026-11-07", up:"2026-11-08", b:"MCP is the connective tissue between agents and systems: OpenAI products consume it (incl. private servers), Salesforce exposes its platform through it, Anthropic's Claude plugs into Salesforce through it. Build every tool as an MCP server; assume every agent will speak it. Batch 2: Exa (search), Zatanna (portals) and Get Physics Done (research tools) all ship MCP servers as their main interface."},
+    {id:"PAT-4", t:"Governed agent access: tunnels, inherited permissions, audit", k:"pattern", g:"world", p:["OpenAI","Salesforce","X"], s:3, src:["W2","W3","W5","W19"], ad:"2026-11-07", up:"2026-11-08", b:"Governed agent access: outbound-only tunnels, permissions inherited per user, audit trails, and testing / tracing / eval tools shipped alongside. Governance is part of the product, not an afterthought, and analysts say the vendor versions still need supplementing for 12-18 months. Batch 2: X's xurl skill keeps account credentials outside the model session while the agent acts."},
     {id:"PAT-5", t:"Consumption pricing replaces seats as agents do the work", k:"pattern", g:"world", p:["Salesforce"], s:1, src:["W8","W9"], ad:"2026-11-07", b:"Consumption pricing replaces seats as agents do the work. Salesforce calls headless usage a 'fourth monetization vector' and prices by consumption, with inference bought separately from Anthropic. 'Burn tokens, not headcount' is becoming vendor pricing reality, and the pricing is explicitly unfinished."},
     {id:"PROD-1", t:"Miracle of Mind in ChatGPT", k:"product", g:"world", p:["Isha Foundation"], s:1, src:["W1"], st:"shipping", rc:"unproven", asof:"2026-11-07", ad:"2026-11-07", b:"Miracle of Mind in ChatGPT (Isha Foundation): Sadhguru's 7-minute meditation app distributed inside ChatGPT via the app store; prompt 'Meditate'. The standalone app is real and large (1M downloads in 15 hours, 2025); no usage data exists for the ChatGPT channel."},
     {id:"PROD-2", t:"Secure MCP Tunnel / tunnel-client", k:"product", g:"world", p:["OpenAI"], s:1, src:["W2","W11"], st:"shipping", rc:"early", asof:"2026-11-07", ad:"2026-11-07", b:"OpenAI Secure MCP Tunnel (open-source tunnel-client): lets private MCP servers serve ChatGPT, Codex and the Responses API over outbound-only HTTPS. Defaults: 600 req/min, 10 MiB, 120 s. Works per setup guides; forum reports of creation failures (fixed) and HTTP 424s; needs a Business/Enterprise workspace."},
@@ -406,7 +430,36 @@
     {id:"PROD-6", t:"ChatGPT apps + App Directory", k:"product", g:"world", p:["OpenAI"], s:1, src:["W7","W1"], st:"shipping", rc:"mixed", asof:"2026-11-07", ad:"2026-11-07", b:"ChatGPT apps + App Directory (OpenAI): third-party apps inside ChatGPT (Apps SDK Oct 2025, directory Dec 2025). ~300 integrations by Mar 2026, but hard to find, little partner traffic, slow approvals; OpenAI concedes the developer experience 'needs to improve'."},
     {id:"OPP-1", t:"Build agent-first from day one: MCP/API surface first, UI second", k:"opp", g:"world", p:["Salesforce","OpenAI"], s:2, src:["W6","W2"], st:"idea", asof:"2026-11-07", ad:"2026-11-07", b:"Build agent-first from day one: our product is an MCP/API surface first and a UI second, reachable from ChatGPT, Claude, Codex and Cursor before it has a web app. Incumbents are retrofitting this at great cost and being asked what they are once the interface commoditises; we can start there."},
     {id:"OPP-2", t:"Vendor-neutral governed agent access for mid-size companies", k:"opp", g:"world", p:["Info-Tech (Bickley)","OpenAI community"], s:2, src:["W5","W11"], st:"idea", asof:"2026-11-07", ad:"2026-11-07", b:"Vendor-neutral governed agent access for mid-size companies: OpenAI's tunnel serves only OpenAI products and needs an enterprise workspace, Salesforce's governance covers only Salesforce, analysts say vendor governance needs supplementing for 12-18 months. One self-hosted gateway (tunnel + inherited permissions + tracing + evals) for any agent is open."},
-    {id:"OPP-3", t:"Distribution inside assistants is unsolved", k:"opp", g:"world", p:["Bloomberg / PYMNTS"], s:1, src:["W7"], st:"idea", asof:"2026-11-07", ad:"2026-11-07", b:"Distribution inside assistants is unsolved: the ChatGPT app channel sends partners little traffic and is hard to search; even Isha has to email its list to say its app exists in ChatGPT. Agent-era discovery (how an assistant picks which tool to invoke) is the new storefront and nobody owns it yet. Log, don't build, until it firms up."}
+    {id:"OPP-3", t:"Distribution inside assistants is unsolved", k:"opp", g:"world", p:["Bloomberg / PYMNTS","Enrich Labs"], s:2, src:["W7","W25"], st:"idea", asof:"2026-11-08", ad:"2026-11-07", up:"2026-11-08", b:"Distribution inside assistants is unsolved: the ChatGPT app channel sends partners little traffic and is hard to search; even Isha has to email its list to say its app exists in ChatGPT. Agent-era discovery (how an assistant picks which tool to invoke) is the new storefront and nobody owns it yet. Log, don't build, until it firms up. Batch 2: Enrich Labs already sells 'Agent Conversion Optimization' (how shopping agents recommend brands), so the gap has a first vendor."},
+    {id:"PAT-6", t:"Always-on personal agents: memory, self-written skills, living in your chat apps", k:"pattern", g:"world", p:["OpenClaw","Nous Research","Moonshot AI","Odysseus"], s:4, src:["W18","W20","W21","W12"], ad:"2026-11-08", b:"A personal agent that runs 24/7, keeps long-term memory, turns repeated work into its own reusable skills, runs scheduled jobs, and is reached through WhatsApp, Telegram, Slack or Signal. OpenClaw, Hermes, Odysseus and Kimi Claw are four independent takes. Huge attention (hundreds of thousands of stars), immature security and maintenance."},
+    {id:"PAT-7", t:"The harness is model-agnostic; models are swappable", k:"pattern", g:"world", p:["Anomaly (OpenCode)","xAI","Nous Research"], s:3, src:["W15","W18","W20"], ad:"2026-11-08", b:"Open agent harnesses run any model (OpenCode: 200+ providers incl. local), and xAI lets consumer Grok subscriptions power OpenClaw. The model is not the moat; the harness, skills and owned context are. Caveat: Anthropic took legal action against OpenCode, so subscription use in third-party harnesses is a live policy fight."},
+    {id:"PAT-8", t:"Long-horizon goal mode: one objective, hours of unsupervised work", k:"pattern", g:"world", p:["OpenAI","Nous Research","PSI"], s:3, src:["W16","W20","W31"], ad:"2026-11-08", b:"Agents take one open objective and work on it for hours, asking only on important decisions: Codex /goal (11+ hour runs reported), Hermes scheduled jobs, Get Physics Done's multi-phase autopilot. The skill shifts to writing the goal and the acceptance test. Real but expensive: a 12-hour run can use most of a weekly quota."},
+    {id:"PAT-9", t:"Infrastructure built for machine readers", k:"pattern", g:"world", p:["Lexmount","Exa","Zatanna","Alibaba","Codag"], s:5, src:["W14","W23","W29","W28","W17"], ad:"2026-11-08", b:"A layer of infrastructure treats the agent as the primary user: a browser that outputs Markdown instead of pixels (Moli), a search index for machines (Exa, $2.2B), a compiler from API-less portals to endpoints (Zatanna), an in-page agent reading the DOM as text (PageAgent), a proxy that compresses tool output (Codag). Maturity ranges from working to unproven."},
+    {id:"PAT-10", t:"Expertise ships as a skill pack for any agent host, with verification built in", k:"pattern", g:"world", p:["PSI","X","Enrich Labs"], s:3, src:["W31","W19","W25"], ad:"2026-11-08", b:"Domain expertise packaged as skills, prompts and MCP servers that install into whatever agent the user runs: Get Physics Done (5 hosts, one command), X's xurl API skill, Helena as a Claude connector. GPD's recipe is worth stealing: typed goal contracts, listed 'forbidden proxies', and a verifier that must execute a real check before anything passes."},
+    {id:"PAT-11", t:"Agents sold as job roles that do real work with real money", k:"pattern", g:"world", p:["Enrich Labs","Google"], s:2, src:["W25","W26","W24"], ad:"2026-11-08", b:"Agents sold as a role, not a tool: Helena, 'the world's first autonomous AI marketer', moves ad budget daily; Google's Pomelli Agent builds a small business's brand, campaigns and website. The market form of 'burn tokens, not headcount'. Reality check: Pomelli's gains are 'modest' per reviews; Helena's outcome numbers are vendor-only."},
+    {id:"PAT-12", t:"Capable open models run locally or on pooled hardware", k:"pattern", g:"world", p:["Z.ai","Microsoft","Mesh-LLM (Block)","Odysseus"], s:4, src:["W30","W27","W22","W12"], ad:"2026-11-08", b:"Perception, voice and inference no longer have to be rented: GLM-OCR (0.9B) parses documents locally, VibeVoice does hour-long speech in and out, Mesh LLM pools GPUs across machines for huge models, Odysseus runs a whole agent workspace on local models. Own-your-intelligence at the infrastructure level; some releases get walked back."},
+    {id:"PAT-13", t:"Voice becomes a control surface for agents", k:"pattern", g:"world", p:["jia-seed (midi-voice)","Microsoft"], s:2, src:["W13","W27"], ad:"2026-11-08", b:"Spoken intent goes straight to tool calls: a weekend project plays a hardware synth from push-to-talk via Claude tool calls; Microsoft's open models generate 90 minutes of multi-speaker speech and transcribe hour-long recordings. Small, reusable loop: voice to tools to real-world action. Thin evidence so far."},
+    {id:"PAT-14", t:"The agent harness is the attack surface", k:"pattern", g:"world", p:["Koi Security","OpenCode breach (HN)","Odysseus researcher"], s:3, src:["W18","W15","W12"], ad:"2026-11-08", b:"As agents get real tool access, the harness, not the model, is where they break: 341 malicious skills out of 2,857 on OpenClaw's ClawHub plus a one-click RCE; an unauthenticated RCE and a credential breach in OpenCode; a server-takeover chain in Odysseus. Skill marketplaces are a supply-chain problem; always-on agents hold credentials."},
+    {id:"PROD-7", t:"Odysseus", k:"product", g:"world", p:["odysseus-dev (PewDiePie)"], s:1, src:["W12"], st:"shipping", rc:"early", asof:"2026-11-08", ad:"2026-11-08", b:"Self-hosted, local-first AI workspace (chat, agents, deep research, email, calendar, documents, memory, skills, MCP) on local or cloud models. 95k stars. Reality check early: a command-injection chain allowing server takeover was found and patched within a day; no tagged releases; first-run setup friction."},
+    {id:"PROD-8", t:"midi-voice", k:"product", g:"world", p:["jia-seed"], s:1, src:["W13"], st:"shipping", rc:"unproven", asof:"2026-11-08", ad:"2026-11-08", b:"A one-day hobby project: push-to-talk voice turned into Claude tool calls that play and layer loops on a hardware MIDI synth in real time. A cool demonstration of voice to tool calls to physical hardware; 38 stars, no adoption or coverage."},
+    {id:"PROD-9", t:"Moli", k:"product", g:"world", p:["Lexmount"], s:1, src:["W14"], st:"shipping", rc:"early", asof:"2026-11-08", ad:"2026-11-08", b:"A Rust headless browser built for AI agents (own kernel, not Chromium) that outputs Markdown, JSON or a semantic tree and speaks CDP / WebDriver / BiDi. 23k stars in three months. Vendor benchmarks only: 82% pass on its own suite vs Chrome 99.9%, far lower memory."},
+    {id:"PROD-10", t:"OpenCode", k:"product", g:"world", p:["Anomaly (ex-SST)"], s:1, src:["W15"], st:"shipping", rc:"working", asof:"2026-11-08", ad:"2026-11-08", b:"MIT-licensed coding agent for any model (200+ providers, local too): terminal, desktop, mobile, SDK, MCP, skills. 225k stars, HN #1. Security record: an unauthenticated RCE (Jan 2026), a breach leaking stored provider keys (Oct 2026), and Anthropic legal action (Mar 2026)."},
+    {id:"PROD-11", t:"Codag", k:"product", g:"world", p:["Codag (YC)"], s:1, src:["W17"], st:"shipping", rc:"unproven", asof:"2026-11-08", ad:"2026-11-08", b:"Local proxy for Claude Code and Codex that compresses big tool outputs before the agent reads them and reports tool / MCP spend. Its own savings claims conflict (~75% vs 20-30%); the only third-party write-up has not measured savings."},
+    {id:"PROD-12", t:"Codex /goal mode", k:"product", g:"world", p:["OpenAI"], s:1, src:["W16"], st:"shipping", rc:"working", asof:"2026-11-08", ad:"2026-11-08", b:"Codex CLI's long-horizon mode: one open objective worked on autonomously for hours. Used for workspace cleanup, file audits and idea generation, not just code. Independent reports of 11+ hour runs; costly (a 12-hour run can use 70%+ of a Pro weekly quota) and hard to verify."},
+    {id:"PROD-13", t:"OpenClaw (+ Grok subscription login)", k:"product", g:"world", p:["OpenClaw","xAI"], s:2, src:["W18"], st:"shipping", rc:"mixed", asof:"2026-11-08", ad:"2026-11-08", b:"Open-source, local-first personal agent with persistent memory across WhatsApp, Telegram, Slack, Signal and iMessage, and a skill marketplace. Grok subscribers can now use their subscription as its model. 394k stars, but Koi Security found 341 malicious skills on ClawHub and a one-click RCE (CVE-2026-25253)."},
+    {id:"PROD-14", t:"Hermes Agent (+ X xurl skill)", k:"product", g:"world", p:["Nous Research","X"], s:2, src:["W20","W19"], st:"shipping", rc:"mixed", asof:"2026-11-08", ad:"2026-11-08", b:"Self-hosted personal agent with memory, self-written skills, scheduled jobs and subagents; X's official xurl CLI ships as a bundled skill with credentials kept out of the model. 261k stars, but ~19k open issues and ~35k open PRs, and unresolved security and plagiarism questions."},
+    {id:"PROD-15", t:"Kimi Claw", k:"product", g:"world", p:["Moonshot AI"], s:1, src:["W21"], st:"beta", rc:"early", asof:"2026-11-08", ad:"2026-11-08", b:"One-click hosted OpenClaw inside kimi.com, running 24/7 on cloud, desktop or a spare Android phone. A paying reviewer called it 'basic' and advised skipping the upgrade; vendor help pages list disconnects and offline instances. No usage numbers."},
+    {id:"PROD-16", t:"Mesh LLM", k:"product", g:"world", p:["Mesh-LLM (Block)"], s:1, src:["W22"], st:"shipping", rc:"early", asof:"2026-11-08", ad:"2026-11-08", b:"Pools GPUs across machines into one OpenAI-compatible endpoint, splitting models too big for one box across peers. 4k stars, HN 347 points; Block's Buzz app uses it on a best-effort public mesh. Self-described as experimental."},
+    {id:"PROD-17", t:"Exa", k:"product", g:"world", p:["Exa Labs"], s:1, src:["W23"], st:"shipping", rc:"working", asof:"2026-11-08", ad:"2026-11-08", b:"Web search engine and API built for AI agents on its own index, with an MCP server. $250M Series C at $2.2B (May 2026), 400k+ developers. An independent comparison found no meaningful quality difference vs other AI search APIs; benchmark wins are self-reported."},
+    {id:"PROD-18", t:"VibeVoice", k:"product", g:"world", p:["Microsoft"], s:1, src:["W27"], st:"shipping", rc:"mixed", asof:"2026-11-08", ad:"2026-11-08", b:"Open voice models: 90-minute multi-speaker TTS, ~300 ms streaming TTS, 60-minute ASR with speaker labels. 57k stars. Microsoft removed the long-form TTS code after misuse and disabled the Large weights; the 1.5B model stays up with a watermark."},
+    {id:"PROD-19", t:"Pomelli + Pomelli Agent", k:"product", g:"world", p:["Google Labs"], s:1, src:["W24"], st:"beta", rc:"working", asof:"2026-11-08", ad:"2026-11-08", b:"Free Google Labs tool that reads a business website into a 'Business DNA' and generates campaigns, ads and product shots; Pomelli Agent (May 2026) builds brand identity, brand books and websites by chat. Available in 170+ countries; reviewers call the gains modest."},
+    {id:"PROD-20", t:"Helena", k:"product", g:"world", p:["Enrich Labs"], s:1, src:["W25","W26"], st:"shipping", rc:"early", asof:"2026-11-08", ad:"2026-11-08", b:"'Autonomous AI marketer': SEO, social, email and paid ads with daily budget moves; also tracks how shopping agents recommend brands. Ships as a Claude connector and ChatGPT plugin. Launch tweet 3.7M views; Shopify app 4.6 stars from only 17 reviews; outcome numbers vendor-only."},
+    {id:"PROD-21", t:"PageAgent", k:"product", g:"world", p:["Alibaba"], s:1, src:["W28"], st:"shipping", rc:"working", asof:"2026-11-08", ad:"2026-11-08", b:"JS library that embeds a natural-language GUI agent inside any web page, reading the DOM as text (no screenshots, no extension, bring your own model), with an optional MCP server. 30k stars and an independent hands-on review."},
+    {id:"PROD-22", t:"Zatanna", k:"product", g:"world", p:["Zatanna (YC W26)"], s:1, src:["W29"], st:"shipping", rc:"early", asof:"2026-11-08", ad:"2026-11-08", b:"Turns API-less web portals (ERP, freight, insurance) into hosted endpoints agents call: record a workflow once, compile the network requests, handle auth, retries and self-repair, expose as an OAuth MCP server. MCP endpoint is live; reliability numbers are vendor claims; ToS criticism on HN."},
+    {id:"PROD-23", t:"GLM-OCR", k:"product", g:"world", p:["Z.ai (Zhipu)"], s:1, src:["W30"], st:"shipping", rc:"working", asof:"2026-11-08", ad:"2026-11-08", b:"A 0.9B open OCR model for documents, tables and formulas that runs fully locally behind an OpenAI-compatible API. About 1.76M Hugging Face downloads a month; independent hands-on tests are positive; headline benchmark is self-reported."},
+    {id:"PROD-24", t:"Get Physics Done — GPD", k:"product", g:"world", p:["Physical Superintelligence PBC"], s:1, src:["W31","W32"], st:"shipping", rc:"early", asof:"2026-11-08", ad:"2026-11-08", b:"Open-source physics research pack for Claude Code, Codex, Gemini CLI, Copilot CLI and OpenCode: 24 role agents, file-based state with locked conventions, typed goal contracts, and a verifier that must execute a real computational check. 4 arXiv papers acknowledge it; stalled since May 2026 after PSI raised $58M for its own product."},
+    {id:"OPP-4", t:"Verification-first skill packs for a vertical", k:"opp", g:"world", p:["PSI"], s:1, src:["W31","W32"], st:"idea", asof:"2026-11-08", ad:"2026-11-08", b:"Users already run capable harnesses; what they lack is trustworthy domain expertise inside them. Build a GPD-style pack for one checkable vertical (finance models, data pipelines, compliance, engineering calcs): locked conventions, contract per phase, executed-oracle verifier, expert-needed escalation, installable into every major harness."},
+    {id:"OPP-5", t:"A trust layer for agent skills and harnesses", k:"opp", g:"world", p:["Koi Security","OpenCode breach (HN)","Odysseus researcher"], s:3, src:["W18","W15","W12"], st:"idea", asof:"2026-11-08", ad:"2026-11-08", b:"Personal and coding agents install third-party skills and hold real credentials, and 2026 showed the cost (malicious skills, credential leaks, RCEs). Build a harness-agnostic layer: scan skills before install, signed manifests with declared permissions, least-privilege sandbox, and a credential broker so secrets never enter the model context."}
   ];
 
   // Talk-advice nodes — mirrors actionable-ideas.md (ad: added · up: updated)
@@ -427,7 +480,7 @@
     {id:"HARNESS-2", t:"Keep evals across generations, but expect to saturate & discard", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Keep evals stable across model generations as the measuring stick — but on the exponential you saturate them, so keep appending hard cases and rebuild when maxed out."},
     {id:"ORCH-1", t:"Dynamic workflows: fan-out → verify → fan-out", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Dynamic workflows: fan-out across many agents → verify → optionally fan out again. Test-time compute as intelligent task decomposition for genuinely hard problems."},
     {id:"ORCH-2", t:"Routines: scheduled autonomous agent runs", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"Routines: schedule recurring autonomous agent runs (dead-code cleanup, tests, dedup) so engineers can just ship product and talk to users."},
-    {id:"SEC-1", t:"On frontier aligned models, don't over-engineer input sanitization", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", b:"On frontier aligned models, don't over-engineer input sanitization — layered alignment + injection classifiers + interp monitoring handle most threats. (Re-check per model.)"},
+    {id:"SEC-1", t:"On frontier aligned models, don't over-engineer input sanitization", g:"build", p:["Cherny"], s:1, src:["S4"], ad:"2026-08-11", up:"2026-11-08", b:"On frontier aligned models, don't over-engineer input sanitization — layered alignment + injection classifiers + interp monitoring handle most threats. (Re-check per model.)"},
 
     {id:"OWN-1", t:"Build a Personal AGI you own", g:"own", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Build a Personal AGI you own — an agent on your infra reading your memory, running procedures you wrote. It compounds every day; rented AI only improves when the vendor ships."},
     {id:"OWN-2", t:"Start your library now (this weekend)", g:"own", p:["Tan"], s:1, src:["S2"], ad:"2026-08-11", b:"Start your library now: markdown-dump your history — one page per project and per person. 'Your inbox is your moat just lying there.'"},
@@ -504,8 +557,16 @@
     ["PAT-1","MIND-4","evidence","evidence for"],["PAT-2","QUERY-1","evidence","evidence for"],["PAT-3","QUERY-1","evidence","evidence for"],["PROD-5","QUERY-1","evidence","evidence for"],
     ["PAT-5","TOKEN-1","evidence","evidence for"],["PAT-5","MIND-7","evidence","evidence for"],
     ["PAT-2","LOOP-2","relate","enables"],["PAT-2","PAT-3","reinforce","builds on"],["PAT-4","PAT-3","reinforce","builds on"],["PAT-3","OPS-4","relate","compare"],["PAT-4","SEC-1","relate","compare"],["PAT-5","OPS-2","relate","compare"],
-    ["OPP-1","PAT-2","reinforce","builds on"],["OPP-1","PAT-3","reinforce","builds on"],["OPP-1","QUERY-1","relate","instance of"],["OPP-2","PAT-4","reinforce","builds on"],["OPP-3","PAT-1","reinforce","builds on"],["OPP-3","PROD-6","relate","gap in"]
+    ["OPP-1","PAT-2","reinforce","builds on"],["OPP-1","PAT-3","reinforce","builds on"],["OPP-1","QUERY-1","relate","instance of"],["OPP-2","PAT-4","reinforce","builds on"],["OPP-3","PAT-1","reinforce","builds on"],["OPP-3","PROD-6","relate","gap in"],
+    // ---- world layer batch 2 (2026-11-08)
+    ["PROD-13","PAT-6","evidence","demonstrates"],["PROD-14","PAT-6","evidence","demonstrates"],["PROD-7","PAT-6","evidence","demonstrates"],["PROD-15","PAT-6","evidence","demonstrates"],["PROD-10","PAT-7","evidence","demonstrates"],["PROD-13","PAT-7","evidence","Grok login"],["PROD-14","PAT-7","evidence","demonstrates"],["PROD-12","PAT-8","evidence","demonstrates"],["PROD-14","PAT-8","evidence","scheduled jobs"],["PROD-24","PAT-8","evidence","autopilot"],["PROD-9","PAT-9","evidence","demonstrates"],["PROD-17","PAT-9","evidence","demonstrates"],["PROD-22","PAT-9","evidence","demonstrates"],["PROD-21","PAT-9","evidence","demonstrates"],["PROD-11","PAT-9","evidence","demonstrates"],["PROD-24","PAT-10","evidence","demonstrates"],["PROD-14","PAT-10","evidence","xurl skill"],["PROD-20","PAT-10","evidence","connector"],["PROD-20","PAT-11","evidence","demonstrates"],["PROD-19","PAT-11","evidence","demonstrates"],["PROD-23","PAT-12","evidence","demonstrates"],["PROD-18","PAT-12","evidence","demonstrates"],["PROD-16","PAT-12","evidence","demonstrates"],["PROD-7","PAT-12","evidence","local models"],["PROD-8","PAT-13","evidence","demonstrates"],["PROD-18","PAT-13","evidence","demonstrates"],["PROD-13","PAT-14","evidence","malicious skills"],["PROD-10","PAT-14","evidence","breach + RCE"],["PROD-7","PAT-14","evidence","RCE chain"],["PROD-14","PAT-14","evidence","host exec"],["PROD-20","PAT-1","evidence","demonstrates"],["PROD-14","PAT-2","evidence","xurl skill"],["PROD-22","PAT-2","evidence","retrofit"],["PROD-17","PAT-3","evidence","MCP server"],["PROD-22","PAT-3","evidence","MCP server"],["PROD-24","PAT-3","evidence","MCP servers"],["PROD-14","PAT-4","evidence","credentials kept out"],["PROD-15","PROD-13","relate","hosts"],["PROD-19","PROD-20","relate","competes with"],["PROD-10","PROD-13","relate","competes with"],["PAT-6","OWN-1","evidence","evidence for"],["PAT-6","OWN-3","evidence","evidence for"],["PAT-6","ORCH-2","evidence","evidence for"],["PAT-7","MIND-4","evidence","evidence for"],["PAT-7","HARNESS-1","relate","compare"],["PAT-8","LOOP-2","evidence","evidence for"],["PAT-8","ORCH-2","evidence","evidence for"],["PAT-8","LOOP-3","relate","relies on"],["PAT-9","QUERY-1","relate","compare"],["PAT-9","PAT-3","reinforce","builds on"],["PAT-9","TOKEN-1","relate","compare"],["PAT-10","ELICIT-2","evidence","evidence for"],["PAT-10","TECH-3","evidence","evidence for"],["PAT-10","OWN-3","relate","compare"],["PROD-24","ELICIT-2","evidence","executed checks"],["PAT-11","TOKEN-1","evidence","evidence for"],["PAT-11","ORG-1","relate","compare"],["PAT-12","OWN-1","evidence","evidence for"],["PAT-12","MIND-4","relate","compare"],["PAT-13","PAT-1","relate","see also"],["PAT-14","SEC-1","tension","tension"],["PAT-14","PAT-4","relate","compare"],["PAT-6","PAT-14","relate","see also"],["OPP-4","PAT-10","reinforce","builds on"],["OPP-4","PAT-8","reinforce","builds on"],["OPP-4","TECH-3","relate","instance of"],["OPP-5","PAT-14","reinforce","builds on"],["OPP-5","PAT-6","reinforce","builds on"],["OPP-5","OPP-2","relate","compare"],["OPP-3","PROD-20","relate","first vendor"]
   ];
+
+
+
+
+
+
 
 
 
@@ -545,25 +606,33 @@
     var a=(i/GORDER.length)*Math.PI*2 - Math.PI/2;
     anchors[g]={x:CX+Math.cos(a)*270, y:CY+Math.sin(a)*215};
   });
+  // world nodes: patterns, opportunities and products each get their own orbit so the layer doesn't pile up
+  var wAng=(GORDER.indexOf("world")/GORDER.length)*Math.PI*2 - Math.PI/2;
+  function anchorOf(n){
+    if(n.g!=="world") return anchors[n.g];
+    var R=n.k==="product"?360:(n.k==="opp"?300:250), off=n.k==="opp"?0.55:(n.k==="product"?-0.12:0);
+    return {x:CX+Math.cos(wAng+off)*R*1.08, y:CY+Math.sin(wAng+off)*R*0.86};
+  }
+  var seed=20261108; function rand(){ seed=(seed*1664525+1013904223)>>>0; return seed/4294967296; }
   NODES.forEach(function(n){
-    var a=anchors[n.g];
-    n.x=a.x+(Math.random()-0.5)*90; n.y=a.y+(Math.random()-0.5)*90;
-    n.vx=0; n.vy=0; n.r = n.k==="product" ? 9 : 9+(n.s-1)*5;
+    var a=anchorOf(n); n.ax=a.x; n.ay=a.y;
+    n.x=a.x+(rand()-0.5)*90; n.y=a.y+(rand()-0.5)*90;
+    n.vx=0; n.vy=0; n.r = n.k==="product" ? 8 : 9+Math.min(n.s-1,3)*5;
   });
 
   // ----------------------------------------------------------- render
-  var svg=document.getElementById("graph"), gViewport=document.getElementById("viewport"), gEdges=document.getElementById("edges"), gNodes=document.getElementById("nodes");
+  var svg=document.getElementById("graph"), gViewport=document.getElementById("viewport"), gEdges=document.getElementById("edges"), gNodes=document.getElementById("nodes"), gLabels=document.getElementById("labels");
   function mk(tag,attrs){ var e=document.createElementNS(NS,tag); if(attrs) for(var k in attrs) e.setAttribute(k,attrs[k]); return e; }
   var edgeEls=EDGES.map(function(e){ var l=mk("line",{class:"edge "+e[2]}); l._e=e; gEdges.appendChild(l); return l; });
   var nodeEls=NODES.map(function(n){
-    var g=mk("g",{class:"node"+(n.s>=3?" lbl":""),tabindex:"0","data-id":n.id,role:"button","aria-label":title(n)});
+    var g=mk("g",{class:"node"+(n.s>=3&&n.k!=="product"?" lbl":""),tabindex:"0","data-id":n.id,role:"button","aria-label":title(n)});
     if(n.s>=2 && n.k!=="product"){ g.appendChild(mk("circle",{class:"ring", r:n.r+4, "stroke-width": n.s>=3?2.4:1.8})); }
     var c;
     if(n.k==="product"){ c=mk("rect",{class:"body", x:-n.r, y:-n.r, width:n.r*2, height:n.r*2, rx:3, fill:tcolor(n.g)}); }
     else if(n.k==="opp"){ var rr=n.r*1.25; c=mk("path",{class:"body", d:"M0 "+(-rr)+" L"+rr+" 0 L0 "+rr+" L"+(-rr)+" 0 Z", fill:tcolor(n.g)}); }
     else { c=mk("circle",{class:"body", r:n.r, fill:tcolor(n.g)}); }
     g.appendChild(c);
-    var t=mk("text",{y:n.r+(n.s>=2&&n.k!=="product"?17:14)}); t.textContent=shortT(n); g.appendChild(t);
+    var t=mk("text",{class:"lt"}); t._dy=n.r+(n.s>=2&&n.k!=="product"?17:14); t.textContent=shortT(n); gLabels.appendChild(t); g._t=t;
     g._n=n; gNodes.appendChild(g); return g;
   });
   nodeEls.forEach(function(g){ if(g._n.s>=3) gNodes.appendChild(g); });   // labelled nodes draw on top
@@ -578,6 +647,7 @@
       for(j=i+1;j<NODES.length;j++){ m=NODES[j]; if(m._show===false) continue;
         dx=n.x-m.x; dy=n.y-m.y; d2=dx*dx+dy*dy+0.01; d=Math.sqrt(d2);
         f=3500/d2; if(f>4.5)f=4.5; var ux=dx/d, uy=dy/d;
+        var minD=n.r+m.r+10; if(d<minD) f+=(minD-d)*0.6;
         n.vx+=ux*f; n.vy+=uy*f; m.vx-=ux*f; m.vy-=uy*f;
       }
     }
@@ -586,8 +656,8 @@
       var L=e[2]==="reinforce"?82:(e[2]==="evidence"?70:100); f=(d-L)*0.026; var vx=dx/d*f, vy=dy/d*f;
       n.vx+=vx; n.vy+=vy; m.vx-=vx; m.vy-=vy;
     }
-    for(i=0;i<NODES.length;i++){ n=NODES[i]; var a=anchors[n.g];
-      n.vx+=(a.x-n.x)*0.020 + (CX-n.x)*0.004; n.vy+=(a.y-n.y)*0.020 + (CY-n.y)*0.004;
+    for(i=0;i<NODES.length;i++){ n=NODES[i];
+      n.vx+=(n.ax-n.x)*0.020 + (CX-n.x)*0.004; n.vy+=(n.ay-n.y)*0.020 + (CY-n.y)*0.004;
     }
     for(i=0;i<NODES.length;i++){ n=NODES[i]; if(n.fixed) continue;
       n.vx*=0.86; n.vy*=0.86;
@@ -597,7 +667,7 @@
     alpha*=0.985;
   }
   function draw(){
-    for(var i=0;i<NODES.length;i++){ var n=NODES[i]; nodeEls[i].setAttribute("transform","translate("+n.x.toFixed(2)+","+n.y.toFixed(2)+")"); }
+    for(var i=0;i<NODES.length;i++){ var n=NODES[i], t=nodeEls[i]._t; nodeEls[i].setAttribute("transform","translate("+n.x.toFixed(2)+","+n.y.toFixed(2)+")"); t.setAttribute("x",n.x.toFixed(1)); t.setAttribute("y",(n.y+t._dy).toFixed(1)); }
     for(i=0;i<EDGES.length;i++){ var e=EDGES[i], a=byId[e[0]], b=byId[e[1]];
       var dx=b.x-a.x, dy=b.y-a.y, d=Math.sqrt(dx*dx+dy*dy)||1, ux=dx/d, uy=dy/d, el=edgeEls[i];
       el.setAttribute("x1",(a.x+ux*(a.r+2)).toFixed(2)); el.setAttribute("y1",(a.y+uy*(a.r+2)).toFixed(2));
@@ -605,8 +675,22 @@
     }
   }
   var fitPending=false;
-  function loop(){ tick(); draw(); if(alpha>0.02||dragNode){ raf=requestAnimationFrame(loop); } else { running=false; if(fitPending){ fitPending=false; fitView(); } } }
-  function reheat(a){ alpha=Math.max(alpha,a||0.7); if(reduce){ for(var k=0;k<220;k++) tick(); draw(); if(fitPending){ fitPending=false; fitView(); } return; } if(!running){ running=true; raf=requestAnimationFrame(loop); } }
+  // at rest, keep only the labels that have room: strongest first, skip any that would overlap a kept label or a node
+  function declutter(){
+    var boxes=[], cand=[];
+    nodeEls.forEach(function(g){ var n=g._n; g.classList.remove("lblhide"); if(g.classList.contains("lbl") && n._show!==false) cand.push(g); });
+    cand.sort(function(a,b){ return b._n.s-a._n.s || a._n.id.localeCompare(b._n.id); });
+    cand.forEach(function(g){
+      var n=g._n, w=Math.min(shortT(n).length,30)*5.6, y=n.y+n.r+13;
+      var bx={x1:n.x-w/2, x2:n.x+w/2, y1:y-9, y2:y+3};
+      var hit=boxes.some(function(b){ return !(bx.x2<b.x1||bx.x1>b.x2||bx.y2<b.y1||bx.y1>b.y2); }) ||
+        NODES.some(function(m){ return m!==n && m._show!==false && m.x>bx.x1 && m.x<bx.x2 && m.y>bx.y1-2 && m.y<bx.y2+2; });
+      if(hit || boxes.length>=8) g.classList.add("lblhide"); else boxes.push(bx);
+    });
+  }
+  var frame=0;
+  function loop(){ tick(); draw(); if((++frame)%20===0) declutter(); if(alpha>0.02||dragNode){ raf=requestAnimationFrame(loop); } else { running=false; declutter(); if(fitPending){ fitPending=false; fitView(); } } }
+  function reheat(a){ alpha=Math.max(alpha,a||0.7); if(reduce){ for(var k=0;k<220;k++) tick(); draw(); declutter(); if(fitPending){ fitPending=false; fitView(); } return; } if(!running){ running=true; raf=requestAnimationFrame(loop); } }
 
   // ----------------------------------------------------------- pan / zoom
   var tx=0, ty=0, kZoom=1;
@@ -825,6 +909,12 @@
     srcBox.appendChild(d);
   });
 
+  // ----------------------------------------------------------- label layer mirrors node state
+  function syncLabels(){ nodeEls.forEach(function(g){ g._t.setAttribute("class","lt"+g.getAttribute("class").replace(/^node/,"")); }); }
+  var _cf=computeFocus; computeFocus=function(){ _cf(); syncLabels(); };
+  var _dc=declutter; declutter=function(){ _dc(); syncLabels(); };
+  var _af=applyFilters; applyFilters=function(f){ _af(f); syncLabels(); };
+
   // ----------------------------------------------------------- theme + boot
   var themeBtn=document.getElementById("themeBtn");
   function currentTheme(){ var e=document.documentElement.getAttribute("data-theme"); if(e) return e; return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"; }
@@ -834,8 +924,9 @@
   setTheme(savedTheme||currentTheme());
   setView(savedView==="list"?"list":"graph");
   if(!seen && savedView!=="list") showIntro();
-  applyFilters(true);
-  reheat(1);
+  // settle the layout synchronously so the first paint is already calm, fitted and labelled
+  applyFilters(false); if(raf) cancelAnimationFrame(raf); running=false; fitPending=false;
+  alpha=1; for(var k1=0;k1<420;k1++) tick(); alpha=0; draw(); declutter(); fitView();
 })();
 </script>
 </body>
