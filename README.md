@@ -35,4 +35,6 @@ When a new talk is added to `../actionable-ideas.md`:
 
 - **Hover** a node for its idea; **click** for the full detail panel with sources.
 - Filter by **consensus** (All / ≥2 / ≥3 speakers), toggle **themes**, or **search**.
+- Filter the world layer by **domain** (`dom` on every pattern, product and opportunity) and patterns by **outlook**
+  (`sl` plus a one-line reason `slw`; our own dated judgement). `node tools/validate.js` checks both.
 - Drag nodes, scroll to zoom, drag the canvas to pan. Light/dark toggle in the header.

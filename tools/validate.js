@@ -13,6 +13,10 @@ var KINDS = { idea: 1, pattern: 1, product: 1, opp: 1 }, EK = { reinforce: 1, re
 var ST = { announced: 1, beta: 1, shipping: 1, dead: 1, acquired: 1, idea: 1, exploring: 1, building: 1, dropped: 1 };
 var RC = { working: 1, early: 1, mixed: 1, unproven: 1, hype: 1, dead: 1 };
 var DATE = /^\d{4}-\d{2}(-\d{2})?$/;
+var DOMAINS = ctx.DOMAINS || {}, OUTLOOK = ctx.OUTLOOK || {};
+(ctx.DORDER || []).forEach(function (k) { if (!DOMAINS[k]) errs.push("DORDER key missing in DOMAINS: " + k); });
+(ctx.OORDER || []).forEach(function (k) { if (!OUTLOOK[k]) errs.push("OORDER key missing in OUTLOOK: " + k); });
+if (!ctx.OUTLOOK_DATE || !DATE.test(ctx.OUTLOOK_DATE)) errs.push("missing/bad OUTLOOK_DATE");
 
 GORDER.forEach(function (g) { if (!G[g]) errs.push("GORDER group missing in GROUPS: " + g); });
 all.forEach(function (n) {
@@ -36,6 +40,10 @@ all.forEach(function (n) {
     if (!n.asof || !DATE.test(n.asof)) errs.push(n.id + ": missing/bad asof");
     if (n.k === "product" && (!n.rc || !RC[n.rc])) errs.push(n.id + ": missing/bad reality check rc=" + n.rc);
   }
+  if (n.k === "idea") { if (n.dom || n.sl) errs.push(n.id + ": idea node must not carry dom / sl"); }
+  else if (!n.dom || !DOMAINS[n.dom]) errs.push(n.id + ": missing/bad domain " + n.dom);
+  if (n.k === "pattern") { if (!n.sl || !OUTLOOK[n.sl]) errs.push(n.id + ": missing/bad outlook " + n.sl); if (!n.slw || n.slw.length < 15) errs.push(n.id + ": outlook reason too short"); }
+  else if (n.sl || n.slw) errs.push(n.id + ": only patterns carry an outlook");
   if (!n.b || n.b.length < 20) errs.push(n.id + ": blurb too short");
   if (!n.t || n.t.length < 3) errs.push(n.id + ": missing short title t");
 });
